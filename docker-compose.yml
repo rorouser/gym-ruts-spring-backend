@@ -1,0 +1,138 @@
+version: '2'
+
+services:
+
+  app:
+
+    container_name: my-gym-routine-app
+
+    build: .
+
+    image: my-gym-routine:0.0.1-SNAPSHOT
+
+    ports:
+
+      - "9900:9000"
+      
+    environment:
+
+      - DATABASE_URL=jdbc:mariadb://mariadb:3306/my_gym_routine_db
+
+      - DATABASE_USERNAME=root
+
+      - DATABASE_PASSWORD=usuario  
+
+    depends_on:
+
+      - mariadb
+
+  mariadb:
+
+    image: mariadb:latest
+    
+    container_name: mariadb
+
+    environment:
+
+      MARIADB_DATABASE: my_gym_routine_db
+
+      MARIADB_USER: root
+
+      MARIADB_ROOT_PASSWORD: usuario
+
+      MARIADB_PASSWORD: usuario
+
+    ports:
+
+      - "3306:3306"
+
+
+version: '2'
+
+
+
+services:
+
+
+
+  app:
+
+
+
+    container_name: my-gym-routine-app
+
+
+
+    build: .
+
+
+
+    image: my-gym-routine:0.0.1-SNAPSHOT
+
+
+
+    ports:
+
+
+
+      - "9990:9000"
+
+
+
+    depends_on:
+
+
+
+      - mariadb
+
+
+
+  mariadb:
+
+
+
+    image: mariadb:latest
+
+    
+
+    container_name: mariadb
+
+
+
+    environment:
+    
+    
+    
+    
+    
+    
+    
+    server:
+  port: 9000
+  error:
+    include-message: always
+spring:
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+  security:
+    user:
+      name: root
+      password: usuario
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database: mysql
+    database-platform: org.hibernate.dialect.MariaDBDialect
+    
+application:
+  security:
+    jwt:
+      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      expiration: 86400000 # a day
+
