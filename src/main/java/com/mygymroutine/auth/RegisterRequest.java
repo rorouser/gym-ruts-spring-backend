@@ -1,6 +1,6 @@
 package com.mygymroutine.auth;
 
-import com.mygymroutine.user.Role;
+import com.mygymroutine.persistence.user.Role;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,6 +19,10 @@ public class RegisterRequest {
 	
 	private String email;
 	
+	private Role role;
+	
 	private String password;
+	
+	private String password2;
 
 }

@@ -1,7 +1,7 @@
 package com.mygymroutine.token;
 
 
-import com.mygymroutine.user.User;
+import com.mygymroutine.persistence.user.User;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

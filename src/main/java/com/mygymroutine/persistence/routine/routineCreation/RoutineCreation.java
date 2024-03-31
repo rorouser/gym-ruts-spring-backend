@@ -1,35 +1,31 @@
-package com.mygymroutine.persistence.routineWorkout;
+package com.mygymroutine.persistence.routine.routineCreation;
 
-import com.mygymroutine.persistence.exercise.Exercise;
 import com.mygymroutine.persistence.routine.Routine;
 import com.mygymroutine.persistence.workout.Workout;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class RoutineWorkout {
+public class RoutineCreation {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    private String weekday;
 	
     @ManyToOne
     @JoinColumn(name = "routineId")

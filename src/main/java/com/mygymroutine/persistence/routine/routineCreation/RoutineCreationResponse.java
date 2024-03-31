@@ -1,4 +1,4 @@
-package com.mygymroutine.persistence.routineWorkout;
+package com.mygymroutine.persistence.routine.routineCreation;
 
 import com.mygymroutine.persistence.workout.WorkoutResponse;
 
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RoutineWorkoutResponse {
+public class RoutineCreationResponse {
 	
     private Long id;
 

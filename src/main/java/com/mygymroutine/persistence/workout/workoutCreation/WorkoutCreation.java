@@ -1,4 +1,4 @@
-package com.mygymroutine.persistence.workoutExercise;
+package com.mygymroutine.persistence.workout.workoutCreation;
 
 import com.mygymroutine.persistence.exercise.Exercise;
 import com.mygymroutine.persistence.workout.Workout;
@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class WorkoutExercise {
+public class WorkoutCreation {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

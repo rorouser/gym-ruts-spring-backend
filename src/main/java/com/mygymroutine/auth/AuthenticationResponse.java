@@ -1,6 +1,6 @@
 package com.mygymroutine.auth;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.mygymroutine.persistence.user.Role;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,6 +16,8 @@ public class AuthenticationResponse {
 	private String token;
 	
 	private Integer userId;
+	
+	private Role role;
 
 }
 	

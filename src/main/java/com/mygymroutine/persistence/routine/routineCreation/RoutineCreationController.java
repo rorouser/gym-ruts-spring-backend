@@ -1,46 +1,47 @@
-package com.mygymroutine.persistence.routineWorkout;
+	package com.mygymroutine.persistence.routine.routineCreation;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.mygymroutine.persistence.exercise.Exercise;
 import com.mygymroutine.persistence.routine.Routine;
 import com.mygymroutine.persistence.routine.RoutineCreate;
 import com.mygymroutine.persistence.routine.RoutineResponse;
 import com.mygymroutine.persistence.routine.RoutineService;
+import com.mygymroutine.persistence.user.Role;
+import com.mygymroutine.persistence.user.User;
 import com.mygymroutine.persistence.workout.Workout;
-import com.mygymroutine.persistence.workout.WorkoutCreate;
 import com.mygymroutine.persistence.workout.WorkoutResponse;
-import com.mygymroutine.persistence.workoutExercise.WorkoutExercise;
-import com.mygymroutine.persistence.workoutExercise.WorkoutExerciseResponse;
-import com.mygymroutine.user.Role;
-import com.mygymroutine.user.User;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/routineworkouts")
-public class RoutineWorkoutController {
+public class RoutineCreationController {
 
     @Autowired
-    private RoutineWorkoutService routineWorkoutService;
+    private RoutineCreationService routineCreationService;
     
     @Autowired
     private RoutineService routineService;
 
     @GetMapping("/{routineId}")
-    public ResponseEntity<List<RoutineWorkoutResponse>> getWorkoutExerciseByWorkoutId(@PathVariable Long routineId) {
-        List<RoutineWorkout> routineWorkouts = routineWorkoutService.getRoutineWorkoutByRoutineId(routineId);
+    public ResponseEntity<List<RoutineCreationResponse>> getWorkoutExerciseByWorkoutId(@PathVariable Long routineId) {
+        List<RoutineCreation> routineCreations = routineCreationService.getRoutineWorkoutByRoutineId(routineId);
 
-        List<RoutineWorkoutResponse> routineWorkoutResponses = routineWorkouts.stream()
-                .map(routineWorkout -> RoutineWorkoutResponse.builder()
-                        .id(routineWorkout.getId())
-                        .workout(new WorkoutResponse(routineWorkout.getWorkout().getWorkoutId(), routineWorkout.getWorkout().getWorkoutName(), routineWorkout.getWorkout().getUser().getId()))
-                        .routineId(routineWorkout.getRoutine().getRoutineId())
+        List<RoutineCreationResponse> routineWorkoutResponses = routineCreations.stream()
+                .map(routineCreation -> RoutineCreationResponse.builder()
+                        .id(routineCreation.getId())
+                        .workout(new WorkoutResponse(routineCreation.getWorkout().getWorkoutId(), routineCreation.getWorkout().getWorkoutName(), routineCreation.getWorkout().getUser().getId()))
+                        .routineId(routineCreation.getRoutine().getRoutineId())
                         .build())
                 .collect(Collectors.toList());
 
@@ -48,7 +49,7 @@ public class RoutineWorkoutController {
     }
     
     @PostMapping("/{userId}")
-    public ResponseEntity<Routine> createWorkout(@PathVariable Integer userId, 
+    public ResponseEntity<Routine> createRoutine(@PathVariable Integer userId, 
             @RequestBody RoutineCreate routineCreate) {
         RoutineResponse routineResponse = routineCreate.getRoutine();
         WorkoutResponse[] workoutResponseList = routineCreate.getWorkoutResponseList();
@@ -64,9 +65,9 @@ public class RoutineWorkoutController {
 
 
     @DeleteMapping("/{routineId}")
-    public ResponseEntity<?> deleteWorkout(@PathVariable Long routineId) {
+    public ResponseEntity<?> deleteRoutine(@PathVariable Long routineId) {
         try {
-            routineWorkoutService.deleteByRoutineId(routineId);
+        	routineCreationService.deleteByRoutineId(routineId);
             routineService.deleteRoutineById(routineId);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
@@ -85,11 +86,11 @@ public class RoutineWorkoutController {
                     .user(User.builder().id(userId).role(Role.USER).build())
                     .build();
 
-            RoutineWorkout routineWorkout = RoutineWorkout.builder()
+            RoutineCreation routineWorkout = RoutineCreation.builder()
                     .routine(routine)
                     .workout(workoutToCreate)
                     .build();
-            routineWorkoutService.save(routineWorkout);
+            routineCreationService.save(routineWorkout);
 
             
         }
@@ -108,7 +109,7 @@ public class RoutineWorkoutController {
     @DeleteMapping("/workout/{routineWorkoutId}")
     public ResponseEntity<?> deleteWorkoutofRoutine(@PathVariable Long routineWorkoutId) {
         try {
-        	routineWorkoutService.deleteById(routineWorkoutId);
+        	routineCreationService.deleteById(routineWorkoutId);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             String errorMessage = "Error deleting the workout: " + e.getMessage();

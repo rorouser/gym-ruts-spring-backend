@@ -26,5 +26,11 @@ application:
     jwt:
       secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
       expiration: 86400000 # a day
+      
+admin:
+  firstname: xojin
+  lastname: manitotije 
+  email: casocer8u@xojin.com
+  password: sdhalsyus928?93mj.,woiw90wj!"JMPNU^`hjdsjhaspa'¡saumdkdapuja`da"
 
   

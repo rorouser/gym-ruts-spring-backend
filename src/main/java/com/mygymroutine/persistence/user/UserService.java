@@ -1,4 +1,4 @@
-package com.mygymroutine.user;
+package com.mygymroutine.persistence.user;
 
 import java.util.List;
 import java.util.Optional;

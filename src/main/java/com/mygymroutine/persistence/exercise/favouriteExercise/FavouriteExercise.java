@@ -1,16 +1,14 @@
-package com.mygymroutine.persistence.workoutExercise;
+package com.mygymroutine.persistence.exercise.favouriteExercise;
 
 import com.mygymroutine.persistence.exercise.Exercise;
-import com.mygymroutine.persistence.routine.RoutineResponse;
-import com.mygymroutine.persistence.workout.Workout;
-import com.mygymroutine.persistence.workout.WorkoutResponse;
+import com.mygymroutine.persistence.user.User;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,14 +16,21 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class WorkoutExerciseResponse {
+@AllArgsConstructor
+@Entity
+public class FavouriteExercise {
 	
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private WorkoutResponse workout;
-
+	
+	@ManyToOne
+    @JoinColumn(name = "exercise_id")
     private Exercise exercise;
+	
+	@ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;   
 
 }

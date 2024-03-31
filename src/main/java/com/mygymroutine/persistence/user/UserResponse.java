@@ -1,4 +1,4 @@
-package com.mygymroutine.user;
+package com.mygymroutine.persistence.user;
 
 import java.time.LocalDateTime;
 import java.util.Date;

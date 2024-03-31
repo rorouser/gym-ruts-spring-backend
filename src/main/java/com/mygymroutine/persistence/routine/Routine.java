@@ -1,7 +1,6 @@
 package com.mygymroutine.persistence.routine;
 
-import com.mygymroutine.persistence.exercise.Exercise;
-import com.mygymroutine.user.User;
+import com.mygymroutine.persistence.user.User;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,9 +12,7 @@ import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Data
 @Builder

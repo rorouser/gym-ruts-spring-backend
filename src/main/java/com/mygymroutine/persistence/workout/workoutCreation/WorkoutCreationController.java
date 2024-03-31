@@ -1,45 +1,59 @@
-package com.mygymroutine.persistence.workoutExercise;
+package com.mygymroutine.persistence.workout.workoutCreation;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.mygymroutine.persistence.exercise.Exercise;
-import com.mygymroutine.persistence.routineWorkout.RoutineWorkoutService;
+import com.mygymroutine.persistence.exercise.ExerciseResponse;
+import com.mygymroutine.persistence.routine.routineCreation.RoutineCreationService;
+import com.mygymroutine.persistence.user.Role;
+import com.mygymroutine.persistence.user.User;
 import com.mygymroutine.persistence.workout.Workout;
 import com.mygymroutine.persistence.workout.WorkoutCreate;
 import com.mygymroutine.persistence.workout.WorkoutResponse;
 import com.mygymroutine.persistence.workout.WorkoutService;
-import com.mygymroutine.user.Role;
-import com.mygymroutine.user.User;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/workoutexercises")
-public class WorkoutExerciseController {
+public class WorkoutCreationController {
 
     @Autowired
-    private WorkoutExerciseService workoutExerciseService;
+    private WorkoutCreationService workoutCreationService;
     
     @Autowired
     private WorkoutService workoutService;
     
     @Autowired
-    private RoutineWorkoutService routineWorkoutService;
+    private RoutineCreationService routineCreationService;
 
     @GetMapping("/{workoutId}")
-    public ResponseEntity<List<WorkoutExerciseResponse>> getWorkoutExerciseByWorkoutId(@PathVariable Long workoutId) {
-        List<WorkoutExercise> workoutExercises = workoutExerciseService.getWorkoutExerciseByWorkoutId(workoutId);
+    public ResponseEntity<List<WorkoutCreationResponse>> getWorkoutExerciseByWorkoutId(@PathVariable Long workoutId) {
+        List<WorkoutCreation> workoutExercises = workoutCreationService.getWorkoutExerciseByWorkoutId(workoutId);
 
-        List<WorkoutExerciseResponse> workoutExerciseResponses = workoutExercises.stream()
-                .map(workoutExercise -> WorkoutExerciseResponse.builder()
-                        .id(workoutExercise.getId())
-                        .workout(new WorkoutResponse(workoutExercise.getWorkout().getWorkoutId(), workoutExercise.getWorkout().getWorkoutName(), workoutExercise.getWorkout().getUser().getId()))
-                        .exercise(workoutExercise.getExercise())
+        List<WorkoutCreationResponse> workoutExerciseResponses = workoutExercises.stream()
+                .map(workoutCreation -> WorkoutCreationResponse.builder()
+                        .id(workoutCreation.getId())
+                        .workout(new WorkoutResponse(workoutCreation.getWorkout().getWorkoutId(), 
+                        		workoutCreation.getWorkout().getWorkoutName(), 
+                        		workoutCreation.getWorkout().getUser().getId()))
+                        .exercise(new ExerciseResponse(workoutCreation.getExercise().getExerciseId(),
+                        		workoutCreation.getExercise().getExerciseName(),
+                        		workoutCreation.getExercise().getInstructions(),
+                        		workoutCreation.getExercise().getImg(),
+                        		workoutCreation.getExercise().getIsCalistenics(),
+                        		workoutCreation.getExercise().getMuscleGroup(),
+                        		workoutCreation.getExercise().getUser().getId()))
                         .build())
                 .collect(Collectors.toList());
 
@@ -60,12 +74,12 @@ public class WorkoutExerciseController {
         Workout createdWorkout = workoutService.createWorkout(userId, workoutToCreate);
 
         for (Exercise exercise : exerciseList) {
-            WorkoutExercise workoutExercise = WorkoutExercise.builder()
+        	WorkoutCreation workoutExercise = WorkoutCreation.builder()
                     .workout(createdWorkout)
                     .exercise(exercise)
                     .build();
 
-            workoutExerciseService.save(workoutExercise);
+        	workoutCreationService.save(workoutExercise);
         }
 
         return new ResponseEntity<>(createdWorkout, HttpStatus.CREATED);
@@ -74,8 +88,8 @@ public class WorkoutExerciseController {
     @DeleteMapping("/{workoutId}")
     public ResponseEntity<?> deleteWorkout(@PathVariable Long workoutId) {
         try {
-        	workoutExerciseService.deleteByWorkoutId(workoutId);
-        	routineWorkoutService.deleteByWorkoutId(workoutId);
+        	workoutCreationService.deleteByWorkoutId(workoutId);
+        	routineCreationService.deleteByWorkoutId(workoutId);
         	workoutService.deleteWorkoutById(workoutId);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
@@ -87,7 +101,7 @@ public class WorkoutExerciseController {
     @DeleteMapping("/exercise/{workoutExerciseId}")
     public ResponseEntity<?> deleteExerciseofWorkout(@PathVariable Long workoutExerciseId) {
         try {
-        	workoutExerciseService.deleteById(workoutExerciseId);
+        	workoutCreationService.deleteById(workoutExerciseId);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             String errorMessage = "Error deleting the workout: " + e.getMessage();

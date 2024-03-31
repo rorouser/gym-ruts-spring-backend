@@ -1,13 +1,12 @@
 package com.mygymroutine.persistence.routine;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.mygymroutine.persistence.workout.Workout;
-import com.mygymroutine.user.User;
-
-import java.util.List;
-import java.util.Optional;
+import com.mygymroutine.persistence.user.User;
 
 @Service
 public class RoutineService {

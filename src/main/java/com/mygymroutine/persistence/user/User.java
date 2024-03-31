@@ -1,4 +1,4 @@
-package com.mygymroutine.user;
+package com.mygymroutine.persistence.user;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -46,6 +46,10 @@ public class User implements UserDetails{
 	
 	private String password;
 	
+	private int userWeight;
+	
+	private int userHeight;
+	
 	@CreationTimestamp
 	@Column(name = "registration_date", nullable = false, updatable = false)
 	private Date registrationDate;
@@ -55,6 +59,10 @@ public class User implements UserDetails{
 	
 	@OneToMany(mappedBy = "user")
 	private List<Token> tokens;
+	
+	public User(int id) {
+		this.id = id;
+	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
