@@ -24,20 +24,30 @@ public class UserController {
         this.userService = userService;
     }
     
-    @GetMapping()
-    public ResponseEntity<List<UserResponse>> getAllUsers() {
-        List<User> userList = userService.findAll();
-        List<UserResponse> userResponses = userList.stream()
-                .map(user -> UserResponse.builder()
-                		.id(user.getId())
-                        .firstName(user.getFirstname())
-                        .email(user.getEmail())
-                        .lastName(user.getLastname())
-                        .registrationDate(user.getRegistrationDate())
-                        .build())
-                .collect(Collectors.toList());
+    @GetMapping("/all/{userRole}")
+    public ResponseEntity<List<UserResponse>> getAllUsers(@PathVariable String userRole) {
+    	if(userRole.equals("ADMIN")) {
+    		List<User> userList = userService.findAll();
+            List<UserResponse> userResponses = userList.stream()
+                    .map(user -> UserResponse.builder()
+                    		.id(user.getId())
+                            .firstName(user.getFirstname())
+                            .email(user.getEmail())
+                            .lastName(user.getLastname())
+                            .secondLastName(user.getSecondLastname())
+                            .registrationDate(user.getRegistrationDate())
+                            .userHeight(user.getUserHeight())
+                            .userWeight(user.getUserWeight())
+                            .role(user.getRole().toString())
+                            .profileImage(user.getProfileImage())
+                            .build())
+                    .collect(Collectors.toList());
 
-        return new ResponseEntity<>(userResponses, HttpStatus.OK);
+            return new ResponseEntity<>(userResponses, HttpStatus.OK);
+    	} else {
+    		return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+    	}
+        
     }
 
     @GetMapping("/{userId}")

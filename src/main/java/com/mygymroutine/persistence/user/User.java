@@ -18,6 +18,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -41,6 +42,8 @@ public class User implements UserDetails{
 	
 	private String lastname;
 	
+	private String secondLastname;
+	
 	@Column(unique = true)
 	private String email;
 	
@@ -49,6 +52,9 @@ public class User implements UserDetails{
 	private int userWeight;
 	
 	private int userHeight;
+	
+	@Lob
+    private byte[] profileImage;
 	
 	@CreationTimestamp
 	@Column(name = "registration_date", nullable = false, updatable = false)
