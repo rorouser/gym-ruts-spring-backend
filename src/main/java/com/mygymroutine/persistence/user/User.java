@@ -53,9 +53,6 @@ public class User implements UserDetails{
 	
 	private int userHeight;
 	
-	@Lob
-    private byte[] profileImage;
-	
 	@CreationTimestamp
 	@Column(name = "registration_date", nullable = false, updatable = false)
 	private Date registrationDate;

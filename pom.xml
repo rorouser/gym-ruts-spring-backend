@@ -68,6 +68,12 @@
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-jackson</artifactId>
 			<version>0.11.5</version>
+		</dependency>	
+		<!-- https://mvnrepository.com/artifact/com.github.jbytecode/RCaller -->
+		<dependency>
+		    <groupId>com.github.jbytecode</groupId>
+		    <artifactId>RCaller</artifactId>
+		    <version>4.0.2</version>
 		</dependency>
 	</dependencies>
 

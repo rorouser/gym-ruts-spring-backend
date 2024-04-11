@@ -5,7 +5,14 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import com.mygymroutine.config.JwtService;
+import com.mygymroutine.token.TokenRepository;
+
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,85 +20,53 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/users")
+@RequiredArgsConstructor
 public class UserController {
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     private final UserService userService;
-
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    private final PasswordEncoder passwordEncoder;
     
-    @GetMapping("/all/{userRole}")
+    @GetMapping("/all/admin/{userRole}")
     public ResponseEntity<List<UserResponse>> getAllUsers(@PathVariable String userRole) {
-    	if(userRole.equals("ADMIN")) {
-    		List<User> userList = userService.findAll();
-            List<UserResponse> userResponses = userList.stream()
-                    .map(user -> UserResponse.builder()
-                    		.id(user.getId())
-                            .firstName(user.getFirstname())
-                            .email(user.getEmail())
-                            .lastName(user.getLastname())
-                            .secondLastName(user.getSecondLastname())
-                            .registrationDate(user.getRegistrationDate())
-                            .userHeight(user.getUserHeight())
-                            .userWeight(user.getUserWeight())
-                            .role(user.getRole().toString())
-                            .profileImage(user.getProfileImage())
-                            .build())
-                    .collect(Collectors.toList());
-
-            return new ResponseEntity<>(userResponses, HttpStatus.OK);
+    	List<UserResponse> userList = userService.findAll(userRole);
+    	
+    	if(userList!=null) {
+            return new ResponseEntity<>(userList, HttpStatus.OK);
     	} else {
     		return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
     	}
         
     }
-
-    @GetMapping("/{userId}")
-    public ResponseEntity<UserResponse> getUserById(@PathVariable Integer userId) {
-        Optional<User> user = userService.getUserById(userId);
-
-        return user.map(value -> {
-            UserResponse userResponse = UserResponse.builder()
-                    .firstName(value.getFirstname())
-                    .lastName(value.getLastname())
-                    .email(value.getEmail())
-                    .registrationDate(value.getRegistrationDate())
-                    .build();
-            log.info(userResponse.toString());
-            return new ResponseEntity<>(userResponse, HttpStatus.OK);
-        }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
-
-    @PutMapping("/{userId}")
+    
+    @PutMapping("/update/admin/{userId}")
     public ResponseEntity<UserResponse> updateUser(@PathVariable Integer userId, @RequestBody User updatedUser) {
-        Optional<User> existingUser = userService.getUserById(userId);
+    	UserResponse savedUser = userService.updateUser(userId,updatedUser);
 
-        if (existingUser.isPresent()) {
-            updatedUser.setId(userId);
-            User savedUser = userService.updateUser(updatedUser);
-
-            UserResponse userResponse = UserResponse.builder()
-            		.id(savedUser.getId())
-                    .firstName(savedUser.getFirstname())
-                    .lastName(savedUser.getLastname())
-                    .email(savedUser.getEmail())
-                    .registrationDate(savedUser.getRegistrationDate())
-                    .build();
-
-            return new ResponseEntity<>(userResponse, HttpStatus.OK);
+        if (savedUser!=null) {
+            return new ResponseEntity<>(savedUser, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    //De momento no funciona
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserResponse> getUserById(@PathVariable Integer userId) {
+        UserResponse user = userService.getUserById(userId);
+        
+        if(user!=null) {
+        	return new ResponseEntity<>(user, HttpStatus.OK);
+    	} else {
+    		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    	}
+
+    }
+
+    //De momento no funciona por las foreign key
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable Integer userId) {
-        Optional<User> user = userService.getUserById(userId);
+        Optional<User> user = userService.getUserByIdCheck(userId);
 
         if (user.isPresent()) {
             userService.deleteUser(userId);
