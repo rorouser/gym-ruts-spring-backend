@@ -1,9 +1,7 @@
 package com.mygymroutine.persistence.exercise;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,13 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mygymroutine.persistence.user.Role;
-import com.mygymroutine.persistence.user.User;
-import com.mygymroutine.persistence.workout.Workout;
-import com.mygymroutine.persistence.workout.WorkoutCreate;
-import com.mygymroutine.persistence.workout.WorkoutResponse;
-import com.mygymroutine.persistence.workout.workoutCreation.WorkoutCreation;
-
 @RestController
 @RequestMapping("/api/exercises")
 public class ExerciseController {
@@ -29,7 +20,7 @@ public class ExerciseController {
     @Autowired
     private ExerciseService exerciseService;
 
-
+    //Hacer la conversion para que funcione
     @GetMapping("/{exerciseId}")
     public ResponseEntity<Exercise> getExerciseById(@PathVariable Long exerciseId) {
         Optional<Exercise> exerciseOptional = exerciseService.getExerciseById(exerciseId);
@@ -41,48 +32,27 @@ public class ExerciseController {
     
     @GetMapping("/all/{user}")
     public ResponseEntity<List<ExerciseResponse>> getAllExercisesByUsers(@PathVariable Integer user) {
-    	List<Integer> userIds = new ArrayList<>();
-        userIds.add(1);
-        userIds.add(user);
         
-        List<Exercise> exercises = exerciseService.getAllExercisesByUsers(userIds);
-        
-        List<ExerciseResponse> exercisesResponses = exercises.stream()
-        		.map(exercise -> ExerciseResponse.builder()
-        				.exerciseId(exercise.getExerciseId())
-        				.exerciseName(exercise.getExerciseName())
-        				.instructions(exercise.getInstructions())
-        				.img(exercise.getImg())
-        				.isCalistenics(exercise.getIsCalistenics())
-        				.muscleGroup(exercise.getMuscleGroup())
-        				.userId(exercise.getUser().getId())
-        				.build())
-        		.collect(Collectors.toList());
+        List<ExerciseResponse> exercises = exerciseService.getAllExercisesByUsers(user);
 
-        return exercisesResponses.isEmpty()
-                ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
-                : new ResponseEntity<>(exercisesResponses, HttpStatus.OK);
+        if (exercises.isEmpty())
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		else
+			return new ResponseEntity<>(exercises, HttpStatus.OK);
     }
 
     
     @PostMapping("/{userId}")
     public ResponseEntity<Exercise> createExercise(@PathVariable Integer userId, 
             @RequestBody ExerciseResponse exerciseResponse) {
+
+        Exercise createdExercise = exerciseService.createExercise(userId, exerciseResponse);
         
-        Exercise exerciseToCreate = Exercise.builder()
-				.exerciseId(exerciseResponse.getExerciseId())
-				.exerciseName(exerciseResponse.getExerciseName())
-				.instructions(exerciseResponse.getInstructions())
-				.img(exerciseResponse.getImg())
-				.isCalistenics(exerciseResponse.getIsCalistenics())
-				.muscleGroup(exerciseResponse.getMuscleGroup())
-                .user(User.builder().id(userId).role(Role.USER).build())
-                .build();
-
-        Exercise createdExercise = exerciseService.createExercise(exerciseToCreate);
-
-
-        return new ResponseEntity<>(createdExercise, HttpStatus.CREATED);
+        if (createdExercise!=null)
+        	return new ResponseEntity<>(createdExercise, HttpStatus.CREATED);
+		else
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        
     }
 
 

@@ -19,38 +19,21 @@ public class RoutineController {
     
     @GetMapping("/all/{userId}")
     public ResponseEntity<List<RoutineResponse>> getAllRoutines(@PathVariable Integer userId) {
-        List<Routine> routines = routineService.getAllRoutinesByUserId(userId);
+        List<RoutineResponse> routines = routineService.getAllRoutinesByUserId(userId);
 
-        List<RoutineResponse> routineResponses = routines.stream()
-                .map(routine -> RoutineResponse.builder()
-                        .routineId(routine.getRoutineId())
-                        .routineName(routine.getRoutineName())
-                        .user_id(routine.getUser().getId())
-                        .build())
-                .collect(Collectors.toList());
-
-        return routineResponses.isEmpty()
+        return routines.isEmpty()
                 ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
-                : new ResponseEntity<>(routineResponses, HttpStatus.OK);
+                : new ResponseEntity<>(routines, HttpStatus.OK);
     }
 
     
     @GetMapping("/{routineId}")
-    public ResponseEntity<RoutineResponse> getRoutineById(@PathVariable Long routineId) {
-        Optional<Routine> routineOptional = routineService.getRoutineById(routineId);
+    public ResponseEntity<Optional<RoutineResponse>> getRoutineById(@PathVariable Long routineId) {
+    	Optional<RoutineResponse> routineResponse = routineService.getRoutineById(routineId);
 
-        ResponseEntity<RoutineResponse> result = routineOptional
-                .map(routine -> {
-                    RoutineResponse routineResponse = RoutineResponse.builder()
-                            .routineId(routine.getRoutineId())
-                            .routineName(routine.getRoutineName())
-                            .user_id(routine.getUser().getId())
-                            .build();
-                    return new ResponseEntity<>(routineResponse, HttpStatus.OK);
-                })
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-
-        return result;
+    	return routineResponse.isEmpty()
+                ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
+                : new ResponseEntity<>(routineResponse, HttpStatus.OK);
     }
 
 

@@ -4,6 +4,8 @@ package com.mygymroutine.persistence.exercise;
 import com.mygymroutine.persistence.user.User;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -31,15 +33,17 @@ public class Exercise {
     
     private String img;
     
-    private String isCalistenics;
+    @Enumerated(EnumType.STRING)
+    private MuscleGroup muscleGroup;
     
-    private String muscleGroup;
+    @Enumerated(EnumType.STRING)
+    private IsCalistenics isCalistenics;
     
     @ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
     
-	public Exercise(String exerciseName, String instructions, String img, String isCalistenics, String muscleGroup, User user) {
+	public Exercise(String exerciseName, String instructions, String img, IsCalistenics isCalistenics, MuscleGroup muscleGroup, User user) {
 		super();
 		this.exerciseName = exerciseName;
 		this.instructions = instructions;

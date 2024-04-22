@@ -39,48 +39,17 @@ public class WorkoutCreationController {
 
     @GetMapping("/{workoutId}")
     public ResponseEntity<List<WorkoutCreationResponse>> getWorkoutExerciseByWorkoutId(@PathVariable Long workoutId) {
-        List<WorkoutCreation> workoutExercises = workoutCreationService.getWorkoutExerciseByWorkoutId(workoutId);
-
-        List<WorkoutCreationResponse> workoutExerciseResponses = workoutExercises.stream()
-                .map(workoutCreation -> WorkoutCreationResponse.builder()
-                        .id(workoutCreation.getId())
-                        .workout(new WorkoutResponse(workoutCreation.getWorkout().getWorkoutId(), 
-                        		workoutCreation.getWorkout().getWorkoutName(), 
-                        		workoutCreation.getWorkout().getUser().getId()))
-                        .exercise(new ExerciseResponse(workoutCreation.getExercise().getExerciseId(),
-                        		workoutCreation.getExercise().getExerciseName(),
-                        		workoutCreation.getExercise().getInstructions(),
-                        		workoutCreation.getExercise().getImg(),
-                        		workoutCreation.getExercise().getIsCalistenics(),
-                        		workoutCreation.getExercise().getMuscleGroup(),
-                        		workoutCreation.getExercise().getUser().getId()))
-                        .build())
-                .collect(Collectors.toList());
-
-        return new ResponseEntity<>(workoutExerciseResponses, HttpStatus.OK);
+        List<WorkoutCreationResponse> workoutExercises = workoutCreationService.getWorkoutExerciseByWorkoutId(workoutId);
+        
+        return workoutExercises.isEmpty()
+                ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
+                : new ResponseEntity<>(workoutExercises, HttpStatus.OK);
     }
     
     @PostMapping("/{userId}")
     public ResponseEntity<Workout> createWorkout(@PathVariable Integer userId, 
             @RequestBody WorkoutCreate workoutCreate) {
-        WorkoutResponse workoutResponse = workoutCreate.getWorkout();
-        Exercise[] exerciseList = workoutCreate.getExerciseList();
-        
-        Workout workoutToCreate = Workout.builder()
-                .workoutName(workoutResponse.getWorkoutName())
-                .user(User.builder().id(userId).role(Role.USER).build())
-                .build();
-
-        Workout createdWorkout = workoutService.createWorkout(userId, workoutToCreate);
-
-        for (Exercise exercise : exerciseList) {
-        	WorkoutCreation workoutExercise = WorkoutCreation.builder()
-                    .workout(createdWorkout)
-                    .exercise(exercise)
-                    .build();
-
-        	workoutCreationService.save(workoutExercise);
-        }
+    	Workout createdWorkout = workoutService.createWorkout(userId, workoutCreate);
 
         return new ResponseEntity<>(createdWorkout, HttpStatus.CREATED);
     }

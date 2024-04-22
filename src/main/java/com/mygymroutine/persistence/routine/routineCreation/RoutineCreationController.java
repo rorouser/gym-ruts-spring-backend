@@ -34,33 +34,29 @@ public class RoutineCreationController {
     private RoutineService routineService;
 
     @GetMapping("/{routineId}")
-    public ResponseEntity<List<RoutineCreationResponse>> getWorkoutExerciseByWorkoutId(@PathVariable Long routineId) {
-        List<RoutineCreation> routineCreations = routineCreationService.getRoutineWorkoutByRoutineId(routineId);
+    public ResponseEntity<List<RoutineCreationResponse>> getRoutineWorkoutByRoutineId(@PathVariable Long routineId) {
+        List<RoutineCreationResponse> routineCreations = routineCreationService.getRoutineWorkoutByRoutineId(routineId);
 
-        List<RoutineCreationResponse> routineWorkoutResponses = routineCreations.stream()
-                .map(routineCreation -> RoutineCreationResponse.builder()
-                        .id(routineCreation.getId())
-                        .workout(new WorkoutResponse(routineCreation.getWorkout().getWorkoutId(), routineCreation.getWorkout().getWorkoutName(), routineCreation.getWorkout().getUser().getId()))
-                        .routineId(routineCreation.getRoutine().getRoutineId())
-                        .build())
-                .collect(Collectors.toList());
-
-        return new ResponseEntity<>(routineWorkoutResponses, HttpStatus.OK);
+    	if(!routineCreations.isEmpty()) {
+    		return ResponseEntity.ok(routineCreations);
+    	} else {
+    		return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    	}
     }
     
     @PostMapping("/{userId}")
     public ResponseEntity<Routine> createRoutine(@PathVariable Integer userId, 
             @RequestBody RoutineCreate routineCreate) {
-        RoutineResponse routineResponse = routineCreate.getRoutine();
-        WorkoutResponse[] workoutResponseList = routineCreate.getWorkoutResponseList();
+
+        Routine createdRoutine = routineService.createRoutine(userId, routineCreate);
         
-        Routine routineToCreate = responseToRoutine(userId, routineResponse);
+        if(createdRoutine!=null) {
+        	return new ResponseEntity<>(createdRoutine, HttpStatus.CREATED);
+        } else {
+        	return new ResponseEntity<>(createdRoutine, HttpStatus.NOT_FOUND);
+        }
 
-        Routine createdRoutine = routineService.createRoutine(userId, routineToCreate);
-
-        responseToRoutineWorkout(userId, workoutResponseList, createdRoutine);
-
-        return new ResponseEntity<>(createdRoutine, HttpStatus.CREATED);
+        
     }
 
 
@@ -76,34 +72,6 @@ public class RoutineCreationController {
         }
     }
 
-    
-	private void responseToRoutineWorkout(Integer userId, WorkoutResponse[] workoutResponseList,
-			Routine routine) {
-		for (WorkoutResponse workoutResponse : workoutResponseList) {
-            Workout workoutToCreate = Workout.builder()
-            		.workoutId(workoutResponse.getWorkoutId())
-                    .workoutName(workoutResponse.getWorkoutName())
-                    .user(User.builder().id(userId).role(Role.USER).build())
-                    .build();
-
-            RoutineCreation routineWorkout = RoutineCreation.builder()
-                    .routine(routine)
-                    .workout(workoutToCreate)
-                    .build();
-            routineCreationService.save(routineWorkout);
-
-            
-        }
-	}
-
-	private Routine responseToRoutine(Integer userId, RoutineResponse routineResponse) {
-		Routine routineToCreate = Routine.builder()
-				.routineId(routineResponse.getRoutineId())
-                .routineName(routineResponse.getRoutineName())
-                .user(User.builder().id(userId).role(Role.USER).build())
-                .build();
-		return routineToCreate;
-	}
 	
 	
     @DeleteMapping("/workout/{routineWorkoutId}")
