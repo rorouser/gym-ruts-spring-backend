@@ -21,26 +21,18 @@ public class WorkoutController {
 
     @GetMapping("/all/{userId}")
     public ResponseEntity<List<WorkoutResponse>> getWorkoutById(@PathVariable Integer userId) {
-        List<Workout> workouts = workoutService.getAllWorkoutsByUserId(userId);
-        
-        List<WorkoutResponse> workoutsResponses = workouts.stream()
-                .map(workout -> WorkoutResponse.builder()
-                        .workoutId(workout.getWorkoutId())
-                        .workoutName(workout.getWorkoutName())
-                        .user_id(workout.getUser().getId())
-                        .build())
-                .collect(Collectors.toList());
+        List<WorkoutResponse> workouts = workoutService.getAllWorkoutsByUserId(userId);
 
-        return workoutsResponses.isEmpty()
+        return workouts.isEmpty()
                 ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
-                : new ResponseEntity<>(workoutsResponses, HttpStatus.OK);
+                : new ResponseEntity<>(workouts, HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<Workout> createWorkout(@PathVariable Integer userId, @RequestBody Workout newWorkout) {
-        Workout createdWorkout = workoutService.createWorkout(userId, newWorkout);
-        return new ResponseEntity<>(createdWorkout, HttpStatus.CREATED);
-    }
+//    @PostMapping
+//    public ResponseEntity<Workout> createWorkout(@PathVariable Integer userId, @RequestBody Workout newWorkout) {
+//        Workout createdWorkout = workoutService.createWorkout(userId, newWorkout);
+//        return new ResponseEntity<>(createdWorkout, HttpStatus.CREATED);
+//    }
 
     @DeleteMapping("/{userId}/{workoutId}")
     public ResponseEntity<Void> deleteWorkoutById( @PathVariable Long workoutId) {

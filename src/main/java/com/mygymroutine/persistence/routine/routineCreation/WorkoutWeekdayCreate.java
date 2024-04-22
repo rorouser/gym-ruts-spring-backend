@@ -11,13 +11,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RoutineCreationResponse {
+public class WorkoutWeekdayCreate {
 	
-    private Long id;
+	private WorkoutResponse workout;
+	
+	private WeekDay weekDay;
 
-    private WorkoutResponse workout;
-
-    private Long routineId;
-    
-    private WeekDay weekday;
 }

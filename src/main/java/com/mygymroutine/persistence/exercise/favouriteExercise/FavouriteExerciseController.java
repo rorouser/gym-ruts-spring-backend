@@ -26,31 +26,16 @@ public class FavouriteExerciseController {
 
 	@GetMapping("/{userId}")
 	public ResponseEntity<List<FavouriteExerciseResponse>> getFavouriteExercisesByUserId(@PathVariable Integer userId) {
-	    List<FavouriteExercise> favouriteExercises = favouriteExerciseService.findAllByUserId(userId);
+	    List<FavouriteExerciseResponse> favouriteExercises = favouriteExerciseService.findAllByUserId(userId);
 
-	    List<FavouriteExerciseResponse> favouriteExerciseResponses = favouriteExercises.stream()
-	            .map(favouriteExercise -> {
-	                return FavouriteExerciseResponse.builder()
-	                        .id(favouriteExercise.getId())
-	                        .exercise(new ExerciseResponse(favouriteExercise.getExercise().getExerciseId(),
-	                        		favouriteExercise.getExercise().getExerciseName(),
-	                        		favouriteExercise.getExercise().getInstructions(),
-	                        		favouriteExercise.getExercise().getImg(),
-	                        		favouriteExercise.getExercise().getIsCalistenics(),
-	                        		favouriteExercise.getExercise().getMuscleGroup(),
-	                        		favouriteExercise.getExercise().getUser().getId()))
-	                        .userId(favouriteExercise.getUser().getId())
-	                        .build();
-	            })
-	            .collect(Collectors.toList());
-
-	    return ResponseEntity.ok(favouriteExerciseResponses);
+    	return ResponseEntity.ok(favouriteExercises);
+	    
 	}
 
-	@DeleteMapping("/{userId}")
-	public ResponseEntity<?> deleteFavouriteExercisesByUserId(@PathVariable Long id) {
+	@DeleteMapping("/{id}/{userId}")
+	public ResponseEntity<?> deleteFavouriteExercisesByUserId(@PathVariable Long id, @PathVariable Integer userId) {
 	    try {
-	        favouriteExerciseService.deleteById(id);
+	        favouriteExerciseService.deleteById(userId, id);
 	        return ResponseEntity.noContent().build();
 	    } catch (Exception e) {
 	    	String errorMessage = "Error deleting the routine: " + e.getMessage();

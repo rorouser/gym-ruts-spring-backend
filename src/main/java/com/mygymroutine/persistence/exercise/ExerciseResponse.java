@@ -19,9 +19,9 @@ public class ExerciseResponse {
     
     private String img;
     
-    private String isCalistenics;
+    private MuscleGroup muscleGroup;
     
-    private String muscleGroup;
+    private IsCalistenics isCalistenics;
 
 	private Integer userId;
 
