@@ -31,14 +31,12 @@ public class WeekDayExerciseDetails {
 	
 	private double weight;
 	
-	//private Blob progress;
-	
 	@ManyToOne
     @JoinColumn(name = "exercise_id")
     private Exercise exercise;
 	
 	@ManyToOne
-    @JoinColumn(name = "routineWorkoutId")
+    @JoinColumn(name = "routineCreationId")
     private RoutineCreation routineWorkout;
 
 }

@@ -2,9 +2,13 @@ package com.mygymroutine.persistence.workout.workoutCreation;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.mygymroutine.persistence.exercise.ExerciseResponse;
+import com.mygymroutine.persistence.workout.WorkoutResponse;
 
 import jakarta.transaction.Transactional;
 
@@ -14,8 +18,23 @@ public class WorkoutCreationService {
     @Autowired
     private WorkoutCreationRepository workoutCreationRepository;
 
-	public List<WorkoutCreation> getWorkoutExerciseByWorkoutId(Long workoutId) {
-    	return workoutCreationRepository.findByWorkout_WorkoutId(workoutId);
+	public List<WorkoutCreationResponse> getWorkoutExerciseByWorkoutId(Long workoutId) {
+		List<WorkoutCreation> workoutExercises = workoutCreationRepository.findByWorkout_WorkoutId(workoutId);
+    	return workoutExercises.stream()
+                .map(workoutCreation -> WorkoutCreationResponse.builder()
+                        .id(workoutCreation.getId())
+                        .workout(new WorkoutResponse(workoutCreation.getWorkout().getWorkoutId(), 
+                        		workoutCreation.getWorkout().getWorkoutName(), 
+                        		workoutCreation.getWorkout().getUser().getId()))
+                        .exercise(new ExerciseResponse(workoutCreation.getExercise().getExerciseId(),
+                        		workoutCreation.getExercise().getExerciseName(),
+                        		workoutCreation.getExercise().getInstructions(),
+                        		workoutCreation.getExercise().getImg(),
+                        		workoutCreation.getExercise().getMuscleGroup(),
+                        		workoutCreation.getExercise().getIsCalistenics(),
+                        		workoutCreation.getExercise().getUser().getId()))
+                        .build())
+                .collect(Collectors.toList());
 	}
 
 	public WorkoutCreation save(WorkoutCreation workoutExercise) {
