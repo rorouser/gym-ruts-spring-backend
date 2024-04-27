@@ -11,6 +11,7 @@ public interface RoutineCreationRepository extends JpaRepository<RoutineCreation
 	List<RoutineCreation> findByRoutine_RoutineId(Long routineId);
 	
 	void deleteByRoutine_RoutineId(Long routineId);
+	
 	void deleteByWorkout_WorkoutId(Long workouId);
 
     
