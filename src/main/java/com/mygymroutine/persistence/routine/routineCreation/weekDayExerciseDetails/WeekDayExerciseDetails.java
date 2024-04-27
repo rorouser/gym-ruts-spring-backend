@@ -37,6 +37,8 @@ public class WeekDayExerciseDetails {
 	
 	@ManyToOne
     @JoinColumn(name = "routineCreationId")
-    private RoutineCreation routineWorkout;
+    private RoutineCreation routineCreation;
+	
+	
 
 }
