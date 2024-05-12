@@ -1,12 +1,14 @@
 package com.mygymroutine;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import com.mygymroutine.auth.AuthenticationService;
@@ -20,6 +22,8 @@ import com.mygymroutine.persistence.routine.routineCreation.RoutineCreationRepos
 import com.mygymroutine.persistence.user.Role;
 import com.mygymroutine.persistence.user.User;
 import com.mygymroutine.persistence.user.UserRepository;
+import com.mygymroutine.persistence.user.UserResponse;
+import com.mygymroutine.persistence.user.UserService;
 import com.mygymroutine.persistence.workout.WorkoutRepository;
 import com.mygymroutine.persistence.workout.workoutCreation.WorkoutCreationRepository;
 
@@ -50,6 +54,9 @@ public class DatabaseInitializer {
 	@Autowired
 	private AuthenticationService service;
 	
+	@Autowired
+	private UserService userService; 
+	
  	@Value("${admin.firstname}")
     private String adminFirstname;
 
@@ -76,13 +83,14 @@ public class DatabaseInitializer {
 				.build();
 		
 		var user0 = RegisterRequest.builder()
-				.firstname("USER")
-				.lastname("USER")
-				.email("user@gmail.com")
+				.firstname("Iratxe")
+				.lastname("Llaga")
+				.email("user@user.com")
 				.password("user")
 				.password2("user")
 				.role(Role.USER)
 				.build();
+		
 		
 		service.register(admin);
 		service.register(user0);
@@ -110,7 +118,7 @@ public class DatabaseInitializer {
     	                "crunch.avif", IsCalistenics.YES, MuscleGroup.CORE, user),
     	        new Exercise("Biceps Brachial",
     	                "Engage in a full-body workout by combining squats, push-ups, and jumps, targeting multiple muscle groups simultaneously.",
-    	                "biceps-brachial.avif", IsCalistenics.YES, MuscleGroup.ARMS, user),
+    	                "biceps-brachial.avif", IsCalistenics.NO, MuscleGroup.ARMS, user),
     	        new Exercise("Calves",
     	                "Strengthen your calves with dynamic mountain climber exercises, engaging your core and lower body for stability.",
     	                "calves.avif", IsCalistenics.YES, MuscleGroup.LEGS, user),
@@ -186,7 +194,68 @@ public class DatabaseInitializer {
     	);
 
 	    exerciseRepository.saveAll(exercises);
-	}
+	    
+//	    for (int i = 2; i < 502; i++) {
+//            String email = "user" + i + "@user.com"; 
+//            RegisterRequest registerRequest = RegisterRequest.builder()
+//                    .firstname("Manuel")
+//                    .lastname("Montoya")
+//                    .email(email)
+//                    .password("user")
+//                    .password2("user")
+//                    .role(Role.USER)
+//                    .build();
+//
+//            service.register(registerRequest);
+//	    }
+	    	
+
+//         LocalDateTime initialDate = LocalDateTime.now();
+//        
+//		 for (int i = 2; i < 502; i++) {
+//	            String email = "user" + i + "@user.com"; 
+//	            RegisterRequest registerRequest = RegisterRequest.builder()
+//	                    .firstname("Manuel")
+//	                    .lastname("Montoya")
+//	                    .email(email)
+//	                    .password("user")
+//	                    .password2("user")
+//	                    .role(Role.USER)
+//	                    .build();
+//
+//	            service.register(registerRequest); 
+//	            
+//	            Date currentDate = Date.from(initialDate.minusMonths(i).atZone(ZoneId.systemDefault()).toInstant());
+//	            
+//                User userToUpdate = getUserForPart(userService, i); // Obtener el usuario específico
+//                if (userToUpdate != null) {
+//                    userToUpdate.setRegistrationDate(currentDate);
+//                    userService.updateUser(userToUpdate.getId(), userToUpdate); // Actualizar el usuario
+//                }
+//	            
+//	        }
+//		 }
+//		 
+//		 	
+//
+//		// Método para obtener un usuario específico por su ID
+//		private User getUserForPart(UserService userService, int userId) {
+//		    UserResponse userResponse = userService.getUserById(userId);
+//		    if (userResponse != null) {
+//		        return User.builder()
+//		                .id(userId)
+//		                .firstName(userResponse.getFirstName())
+//		                .lastName(userResponse.getLastName())
+//		                .secondLastName(userResponse.getSecondLastName())
+//		                .email(userResponse.getEmail())
+//		                .userHeight(userResponse.getUserHeight())
+//		                .userWeight(userResponse.getUserWeight())
+//		                .registrationDate(userResponse.getRegistrationDate())
+//		                .build();
+//		    } else {
+//		        return null; 
+//		    }
+		}
 
 
 }

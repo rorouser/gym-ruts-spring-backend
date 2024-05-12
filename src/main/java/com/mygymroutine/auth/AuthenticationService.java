@@ -41,8 +41,8 @@ public class AuthenticationService {
 		
 		if(request.getPassword().contentEquals(request.getPassword2())) {
 			var user = User.builder()
-					.firstname(request.getFirstname())
-					.lastname(request.getLastname())
+					.firstName(request.getFirstname())
+					.lastName(request.getLastname())
 					.email(request.getEmail())
 					.password(passwordEncoder.encode(request.getPassword()))
 					.role(request.getRole() != null ? request.getRole() : Role.USER)
@@ -107,5 +107,8 @@ public class AuthenticationService {
 				.expired(false).build();
 		tokenRepository.save(token);
 	}
+	
+	
+	
 
 }

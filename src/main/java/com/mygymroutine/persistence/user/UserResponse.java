@@ -25,5 +25,6 @@ public class UserResponse {
 	private int userWeight;
 	private int userHeight;
 	private String role;
+	private String password;
 
 }
