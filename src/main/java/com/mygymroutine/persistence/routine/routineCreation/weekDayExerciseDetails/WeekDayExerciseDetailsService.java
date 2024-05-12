@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import com.mygymroutine.persistence.exercise.Exercise;
@@ -21,6 +22,9 @@ public class WeekDayExerciseDetailsService {
 	}
 
 	public WeekDayExerciseDetails create(WeekDayExerciseDetailsResponse weekDayExerciseDetailsResponse) {
+		
+//		WeekDayExerciseDetails details = findByExerciseIdAndRoutineWorkoutId(weekDayExerciseDetailsResponse.getExerciseId(),
+//				weekDayExerciseDetailsResponse.getRoutineCreationId(), weekDayExerciseDetailsResponse.get);
 		
 		WeekDayExerciseDetails weekDayExerciseDetails = WeekDayExerciseDetails.builder()
                 .id(weekDayExerciseDetailsResponse.getId())
@@ -45,8 +49,8 @@ public class WeekDayExerciseDetailsService {
         }
 	}
 
-	public WeekDayExerciseDetails update(WeekDayExerciseDetails details) {
-		return weekDayExerciseDetailsRepository.save(details);
+	public void update(Long id, int series, int reps, double weight) {
+		weekDayExerciseDetailsRepository.editFieldById(id, series, reps, weight);
 	}
 
 	public List<WeekDayExerciseDetails> getAll() {
@@ -73,20 +77,23 @@ public class WeekDayExerciseDetailsService {
                 .collect(Collectors.toList());
     }
     
-    public List<WeekDayExerciseDetailsResponse> findByWorkoutIdAndRoutineId(Long exerciseId, Long routineId, Long workoutId) {
-        List<WeekDayExerciseDetails> weekDayExerciseDetailsList = weekDayExerciseDetailsRepository
+    public WeekDayExerciseDetailsResponse findByWorkoutIdAndRoutineId(Long exerciseId, Long routineId, Long workoutId) {
+        WeekDayExerciseDetails details = weekDayExerciseDetailsRepository
                 .findByExerciseIdAndRoutineIdAndWorkoutId(exerciseId, routineId, workoutId);
 
-        return weekDayExerciseDetailsList.stream()
-                .map(details -> WeekDayExerciseDetailsResponse.builder()
-                        .id(details.getId())
-                        .series(details.getSeries())
-                        .reps(details.getReps())
-                        .weight(details.getWeight())
-                        .exerciseId(details.getExercise().getExerciseId())
-                        .routineCreationId(details.getRoutineCreation().getId())
-                        .build())
-                .collect(Collectors.toList());
+        if (details != null) {
+            return WeekDayExerciseDetailsResponse.builder()
+                    .id(details.getId())
+                    .series(details.getSeries())
+                    .reps(details.getReps())
+                    .weight(details.getWeight())
+                    .exerciseId(details.getExercise().getExerciseId())
+                    .routineCreationId(details.getRoutineCreation().getId())
+                    .build();
+        } else {
+            return null; 
+        }
     }
+
 	
 }

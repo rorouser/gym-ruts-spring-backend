@@ -1,5 +1,7 @@
 package com.mygymroutine.auth;
 
+import java.util.Date;
+
 import com.mygymroutine.persistence.user.Role;
 
 import lombok.AllArgsConstructor;
