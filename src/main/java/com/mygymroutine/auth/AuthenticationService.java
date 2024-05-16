@@ -2,6 +2,7 @@ package com.mygymroutine.auth;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.mygymroutine.config.JwtService;
 import com.mygymroutine.exceptions.NewUserWithDifferentPasswordException;
+import com.mygymroutine.persistence.InitializerService;
 import com.mygymroutine.persistence.user.Role;
 import com.mygymroutine.persistence.user.User;
 import com.mygymroutine.persistence.user.UserRepository;
@@ -36,6 +38,9 @@ public class AuthenticationService {
 	private final AuthenticationManager authenticationManager;
 	
 	private static final Logger log = LogManager.getLogger(AuthenticationService.class);
+	
+	@Autowired
+	private InitializerService initializerService;
 
 	public AuthenticationResponse register(RegisterRequest request) throws NewUserWithDifferentPasswordException {
 		
@@ -52,6 +57,11 @@ public class AuthenticationService {
 				var jwtToken = jwtService.generateToken(user);
 				saveUserToken(savedUser, jwtToken);
 				log.info("AuthenticationService() - User registered");
+				
+				if(savedUser.getId()!=1) {
+					initializerService.CreateDefaultRoutine(user.getId());
+				}
+				
 				return AuthenticationResponse.builder()
 						.token(jwtToken)
 						.userId(user.getId())
