@@ -93,7 +93,6 @@ public class DatabaseInitializer {
 		
 		
 		service.register(admin);
-		service.register(user0);
 		User user = userRepository.findById(1).orElse(null); 
 
         if (user == null) {
@@ -195,7 +194,10 @@ public class DatabaseInitializer {
 
 	    exerciseRepository.saveAll(exercises);
 	    
-//	    for (int i = 2; i < 502; i++) {
+
+		service.register(user0);
+	    
+//	    for (int i = 2; i < 10000; i++) {
 //            String email = "user" + i + "@user.com"; 
 //            RegisterRequest registerRequest = RegisterRequest.builder()
 //                    .firstname("Manuel")

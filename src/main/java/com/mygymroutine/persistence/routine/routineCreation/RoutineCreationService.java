@@ -1,6 +1,7 @@
 package com.mygymroutine.persistence.routine.routineCreation;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,22 @@ public class RoutineCreationService {
     
     public RoutineCreation save(RoutineCreation routineCreation) {
     	return routineCreationRepository.save(routineCreation);
+    }
+    
+    public RoutineCreationResponse getRoutineCreationById(Long routineCreationId) {
+        Optional<RoutineCreation> routineCreationOptional = routineCreationRepository.findById(routineCreationId);
+
+        if (routineCreationOptional.isPresent()) {
+            RoutineCreation routineCreation = routineCreationOptional.get();
+            return RoutineCreationResponse.builder()
+                    .id(routineCreation.getId())
+                    .workout(new WorkoutResponse(routineCreation.getWorkout().getWorkoutId(), routineCreation.getWorkout().getWorkoutName(), routineCreation.getWorkout().getUser().getId()))
+                    .routineId(routineCreation.getRoutine().getRoutineId())
+                    .weekday(routineCreation.getWeekday())
+                    .build();
+        } else {
+            return null; // O devuelve un valor predeterminado
+        }
     }
     
     @Transactional

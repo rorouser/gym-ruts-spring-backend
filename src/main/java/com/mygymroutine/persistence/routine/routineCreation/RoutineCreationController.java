@@ -43,6 +43,16 @@ public class RoutineCreationController {
     		return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     	}
     }
+    @GetMapping("/one/{routineId}")
+    public ResponseEntity<RoutineCreationResponse> getRoutineCreationById(@PathVariable Long routineId) {
+        RoutineCreationResponse routineCreations = routineCreationService.getRoutineCreationById(routineId);
+
+    	if(routineCreations!= null) {
+    		return ResponseEntity.ok(routineCreations);
+    	} else {
+    		return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    	}
+    }
     
     @PostMapping("/{userId}")
     public ResponseEntity<Routine> createRoutine(@PathVariable Integer userId, 

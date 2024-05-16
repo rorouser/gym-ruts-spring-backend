@@ -39,6 +39,14 @@ public class WeekDayExerciseDetails {
     @JoinColumn(name = "routineCreationId")
     private RoutineCreation routineCreation;
 	
-	
+
+    // Constructor con argumentos para inicializar los campos
+    public WeekDayExerciseDetails(int series, int reps, double weight, Exercise exercise, RoutineCreation routineCreation) {
+        this.series = series;
+        this.reps = reps;
+        this.weight = weight;
+        this.exercise = exercise;
+        this.routineCreation = routineCreation;
+    }
 
 }
