@@ -86,6 +86,8 @@ public class DatabaseInitializer {
 				.firstname("Iratxe")
 				.lastname("Llaga")
 				.email("user@user.com")
+				.weight(50)
+				.height(160)
 				.password("user")
 				.password2("user")
 				.role(Role.USER)
@@ -196,20 +198,22 @@ public class DatabaseInitializer {
 	    
 
 		service.register(user0);
+
+		
 	    
-//	    for (int i = 2; i < 10000; i++) {
-//            String email = "user" + i + "@user.com"; 
-//            RegisterRequest registerRequest = RegisterRequest.builder()
-//                    .firstname("Manuel")
-//                    .lastname("Montoya")
-//                    .email(email)
-//                    .password("user")
-//                    .password2("user")
-//                    .role(Role.USER)
-//                    .build();
-//
-//            service.register(registerRequest);
-//	    }
+	    for (int i = 2; i < 12; i++) {
+            String email = "user" + i + "@user.com"; 
+            RegisterRequest registerRequest = RegisterRequest.builder()
+                    .firstname("Manuel")
+                    .lastname("Montoya")
+                    .email(email)
+                    .password("user")
+                    .password2("user")
+                    .role(Role.USER)
+                    .build();
+
+            service.register(registerRequest);
+	    }
 	    	
 
 //         LocalDateTime initialDate = LocalDateTime.now();

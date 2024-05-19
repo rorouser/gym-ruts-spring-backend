@@ -30,7 +30,7 @@ public class AuthenticationController {
 	        return ResponseEntity.ok(response);
 	    } catch (NewUserWithDifferentPasswordException e) {
 	        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-	                .body("Password and confirmation password do not match");
+	                .body("Las contraseñas no coinciden");
 	    } catch (ResponseStatusException e) {
 	        return ResponseEntity.status(e.getStatusCode())
 	        		.body(e.getReason());

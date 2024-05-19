@@ -53,7 +53,7 @@ public class RoutineCreationService {
                     .weekday(routineCreation.getWeekday())
                     .build();
         } else {
-            return null; // O devuelve un valor predeterminado
+            return null; 
         }
     }
     

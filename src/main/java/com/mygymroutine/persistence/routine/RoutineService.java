@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mygymroutine.persistence.exercise.IsCalistenics;
 import com.mygymroutine.persistence.routine.routineCreation.RoutineCreation;
 import com.mygymroutine.persistence.routine.routineCreation.RoutineCreationService;
 import com.mygymroutine.persistence.routine.routineCreation.WorkoutWeekdayCreate;
@@ -14,6 +15,7 @@ import com.mygymroutine.persistence.routine.routineCreation.weekDayExerciseDetai
 import com.mygymroutine.persistence.routine.routineCreation.weekDayExerciseDetails.WeekDayExerciseDetailsService;
 import com.mygymroutine.persistence.user.Role;
 import com.mygymroutine.persistence.user.User;
+import com.mygymroutine.persistence.user.UserService;
 import com.mygymroutine.persistence.workout.Workout;
 import com.mygymroutine.persistence.workout.workoutCreation.WorkoutCreationResponse;
 import com.mygymroutine.persistence.workout.workoutCreation.WorkoutCreationService;
@@ -32,6 +34,9 @@ public class RoutineService {
     
     @Autowired
     private RoutineCreationService routineCreationService;
+    
+    @Autowired 
+    private UserService userService;
 
     public List<RoutineResponse> getAllRoutinesByUserId(Integer userId) {
     	List<Routine> routines = routineRepository.findAllByUser_Id(userId);
@@ -106,15 +111,29 @@ public class RoutineService {
             List<WorkoutCreationResponse> workoutCreationList = workoutCreationService.
         			getWorkoutExerciseByWorkoutId(workoutWeekdayCreate.getWorkout().getWorkoutId());
             
+            Optional<User> existingUser = userService.getUserByIdCheck(userId);
+            
             for (WorkoutCreationResponse workoutCreationResponse : workoutCreationList) {
+            	
+            	WeekDayExerciseDetailsResponse weekDayExerciseDetailsToCreate = new WeekDayExerciseDetailsResponse();
         		
-        		WeekDayExerciseDetailsResponse weekDayExerciseDetailsToCreate = WeekDayExerciseDetailsResponse.builder()
-        				.series(4)
-        				.reps(12)
-        				.weight(40)
-        				.exerciseId(workoutCreationResponse.getExercise().getExerciseId())
-        				.routineCreationId(routineCreation.getId())
-        				.build();
+            	if(workoutCreationResponse.getExercise().getIsCalistenics() == IsCalistenics.YES) {
+            		weekDayExerciseDetailsToCreate = WeekDayExerciseDetailsResponse.builder()
+            				.series(4)
+            				.reps(12)
+            				.weight(existingUser.get().getUserWeight())
+            				.exerciseId(workoutCreationResponse.getExercise().getExerciseId())
+            				.routineCreationId(routineCreation.getId())
+            				.build();
+            	} else {
+            		weekDayExerciseDetailsToCreate = WeekDayExerciseDetailsResponse.builder()
+            				.series(4)
+            				.reps(12)
+            				.weight(40)
+            				.exerciseId(workoutCreationResponse.getExercise().getExerciseId())
+            				.routineCreationId(routineCreation.getId())
+            				.build();
+            	}
         		
         		weekDayExerciseDetailsService.create(weekDayExerciseDetailsToCreate);
         	}
