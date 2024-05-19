@@ -63,7 +63,6 @@ public class UserController {
 
     }
 
-    //De momento no funciona por las foreign key
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable Integer userId) {
         Optional<User> user = userService.getUserByIdCheck(userId);

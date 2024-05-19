@@ -1,7 +1,12 @@
 package com.mygymroutine.persistence.workout;
 
-import com.mygymroutine.persistence.user.User;
+import java.util.List;
 
+import com.mygymroutine.persistence.routine.routineCreation.RoutineCreation;
+import com.mygymroutine.persistence.user.User;
+import com.mygymroutine.persistence.workout.workoutCreation.WorkoutCreation;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,5 +36,11 @@ public class Workout {
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
+	
+	@OneToMany(mappedBy = "workout", cascade={CascadeType.REMOVE}, orphanRemoval=true)
+	private List<WorkoutCreation> workoutCreation;
+	
+	@OneToMany(mappedBy = "workout", cascade={CascadeType.REMOVE}, orphanRemoval=true)
+	private List<RoutineCreation> routineCreation;
 
 }

@@ -23,9 +23,6 @@ public class WeekDayExerciseDetailsService {
 
 	public WeekDayExerciseDetails create(WeekDayExerciseDetailsResponse weekDayExerciseDetailsResponse) {
 		
-//		WeekDayExerciseDetails details = findByExerciseIdAndRoutineWorkoutId(weekDayExerciseDetailsResponse.getExerciseId(),
-//				weekDayExerciseDetailsResponse.getRoutineCreationId(), weekDayExerciseDetailsResponse.get);
-		
 		WeekDayExerciseDetails weekDayExerciseDetails = WeekDayExerciseDetails.builder()
                 .id(weekDayExerciseDetailsResponse.getId())
                 .series(weekDayExerciseDetailsResponse.getSeries())

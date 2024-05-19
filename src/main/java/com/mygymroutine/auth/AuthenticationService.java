@@ -49,6 +49,8 @@ public class AuthenticationService {
 					.firstName(request.getFirstname())
 					.lastName(request.getLastname())
 					.email(request.getEmail())
+					.userWeight(request.getWeight())
+					.userHeight(request.getHeight())
 					.password(passwordEncoder.encode(request.getPassword()))
 					.role(request.getRole() != null ? request.getRole() : Role.USER)
 					.build();
@@ -69,7 +71,7 @@ public class AuthenticationService {
 						.build();				
 			} catch(DataIntegrityViolationException ex) {
 				log.error("AuthenticationService() - User cannot be registered beacuse the email is in use");
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This email is in use");		
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Este email ya está en uso");		
 			}
 			
 		} else {
