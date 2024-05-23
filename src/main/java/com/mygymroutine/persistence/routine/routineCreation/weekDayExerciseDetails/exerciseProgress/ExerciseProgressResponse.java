@@ -4,10 +4,12 @@ import java.util.Date;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.mygymroutine.persistence.routine.routineCreation.RoutineCreationResponse;
+import com.mygymroutine.persistence.routine.routineCreation.WeekDay;
 import com.mygymroutine.persistence.routine.routineCreation.weekDayExerciseDetails.WeekDayExerciseDetails;
+import com.mygymroutine.persistence.workout.WorkoutResponse;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,18 +22,13 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@Entity
-public class ExerciseProgress {
+@NoArgsConstructor
+public class ExerciseProgressResponse {
 	
-	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	
-	@ManyToOne
-    @JoinColumn(name = "weekDayExerciseDetails_id")
-    private WeekDayExerciseDetails weekDayExerciseDetails;
+    private Long weekDayExerciseDetailsId;
 	
 	private int series;
 	
@@ -39,10 +36,6 @@ public class ExerciseProgress {
 	
 	private double weight;
 	
-	@CreationTimestamp
-	@Column(name = "workout_date", nullable = false, updatable = false)
 	private Date workoutDate;
-	
-	
 
 }

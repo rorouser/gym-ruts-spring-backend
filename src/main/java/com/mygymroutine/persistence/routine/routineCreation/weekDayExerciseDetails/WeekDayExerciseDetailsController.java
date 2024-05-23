@@ -30,10 +30,10 @@ public class WeekDayExerciseDetailsController {
     }
     
     @GetMapping("/{exerciseId}/{routineId}/{workoutId}")
-    public ResponseEntity<List<WeekDayExerciseDetailsResponse>> getExerciseDetailsByExerciseIdAndRoutineCreationId(
+    public ResponseEntity<WeekDayExerciseDetailsResponse> getExerciseDetailsByExerciseIdAndRoutineCreationId(
             @PathVariable Long exerciseId, @PathVariable Long routineId, @PathVariable Long workoutId) {
-        List<WeekDayExerciseDetailsResponse> detailsList = weekDayExerciseDetailsService.findByWorkoutIdAndRoutineId(exerciseId, routineId, workoutId);
-        if (detailsList.isEmpty()) {
+        WeekDayExerciseDetailsResponse detailsList = weekDayExerciseDetailsService.findByWorkoutIdAndRoutineId(exerciseId, routineId, workoutId);
+        if (detailsList == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(detailsList, HttpStatus.OK);
@@ -43,5 +43,11 @@ public class WeekDayExerciseDetailsController {
     public ResponseEntity<WeekDayExerciseDetails> createWeekDayExerciseDetails(@RequestBody WeekDayExerciseDetailsResponse details) {
     	WeekDayExerciseDetails createdDetails = weekDayExerciseDetailsService.create(details);
         return new ResponseEntity<>(createdDetails, HttpStatus.CREATED);
+    }
+    
+    @PostMapping("/update")
+    public ResponseEntity<WeekDayExerciseDetails> updateWeekDayExerciseDetails(@RequestBody WeekDayExerciseDetailsResponse details) {
+    	weekDayExerciseDetailsService.update(details.getId(), details.getSeries(), details.getReps(), details.getWeight());
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

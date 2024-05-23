@@ -23,9 +23,12 @@ public class UserService {
 	    Optional<User> user = userRepository.findById(userId);
 	    return user.map(value ->
 	            UserResponse.builder()
-	                    .firstName(value.getFirstname())
-	                    .lastName(value.getLastname())
+	                    .firstName(value.getFirstName())
+	                    .lastName(value.getLastName())
+	                    .secondLastName(value.getSecondLastName())
 	                    .email(value.getEmail())
+	                    .userHeight(value.getUserHeight())
+	                    .userWeight(value.getUserWeight())
 	                    .registrationDate(value.getRegistrationDate())
 	                    .build())
 	            .orElse(null);
@@ -36,18 +39,19 @@ public class UserService {
     }
 
     public UserResponse updateUser(Integer userId, User updatedUser) {
-    	Optional<User> existingUser = getUserByIdCheck(userId);
+    	Optional<User> existingUser = getUserByIdCheck(updatedUser.getId());
     	
     	 if (existingUser.isPresent() && 
-    			 (existingUser.get().getId() == userId || existingUser.get().getId() == 1)) {
-             updatedUser.setId(userId);
-             updatedUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+    			 (existingUser.get().getId() == updatedUser.getId() || userId == 1)) {
+    		 
+             //updatedUser.setId(userId);
+             updatedUser.setPassword(existingUser.get().getPassword());
              User savedUser = userRepository.save(updatedUser);
 
              UserResponse userResponse = UserResponse.builder()
              		 .id(savedUser.getId())
-                     .firstName(savedUser.getFirstname())
-                     .lastName(savedUser.getLastname())
+                     .firstName(savedUser.getFirstName())
+                     .lastName(savedUser.getLastName())
                      .email(savedUser.getEmail())
                      .registrationDate(savedUser.getRegistrationDate())
                      .userWeight(savedUser.getUserWeight())
@@ -70,10 +74,10 @@ public class UserService {
             List<UserResponse> userResponses = userList.stream()
                     .map(user -> UserResponse.builder()
                     		.id(user.getId())
-                            .firstName(user.getFirstname())
+                            .firstName(user.getFirstName())
                             .email(user.getEmail())
-                            .lastName(user.getLastname())
-                            .secondLastName(user.getSecondLastname())
+                            .lastName(user.getLastName())
+                            .secondLastName(user.getSecondLastName())
                             .registrationDate(user.getRegistrationDate())
                             .userHeight(user.getUserHeight())
                             .userWeight(user.getUserWeight())

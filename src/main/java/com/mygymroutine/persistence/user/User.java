@@ -1,6 +1,5 @@
 package com.mygymroutine.persistence.user;
 
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -10,15 +9,19 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.mygymroutine.persistence.exercise.Exercise;
+import com.mygymroutine.persistence.exercise.favouriteExercise.FavouriteExercise;
+import com.mygymroutine.persistence.routine.Routine;
+import com.mygymroutine.persistence.workout.Workout;
 import com.mygymroutine.token.Token;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -38,11 +41,11 @@ public class User implements UserDetails{
 	@GeneratedValue
 	private Integer id;
 	
-	private String firstname;
+	private String firstName;
 	
-	private String lastname;
+	private String lastName;
 	
-	private String secondLastname;
+	private String secondLastName;
 	
 	@Column(unique = true)
 	private String email;
@@ -60,8 +63,20 @@ public class User implements UserDetails{
 	@Enumerated(EnumType.STRING)
 	private Role role = Role.USER;
 	
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "user", cascade={CascadeType.REMOVE}, orphanRemoval=true)
 	private List<Token> tokens;
+	
+	@OneToMany(mappedBy = "user", cascade={CascadeType.REMOVE}, orphanRemoval=true)
+	private List<Exercise> exercises;
+	
+	@OneToMany(mappedBy = "user", cascade={CascadeType.REMOVE}, orphanRemoval=true)
+	private List<Routine> routines;
+	
+	@OneToMany(mappedBy = "user", cascade={CascadeType.REMOVE}, orphanRemoval=true)
+	private List<Workout> workouts;
+	
+	@OneToMany(mappedBy = "user", cascade={CascadeType.REMOVE}, orphanRemoval=true)
+	private List<FavouriteExercise> favouriteExercises;
 	
 	public User(int id) {
 		this.id = id;

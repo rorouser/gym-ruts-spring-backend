@@ -2,6 +2,7 @@ package com.mygymroutine.auth;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.mygymroutine.config.JwtService;
 import com.mygymroutine.exceptions.NewUserWithDifferentPasswordException;
+import com.mygymroutine.persistence.InitializerService;
 import com.mygymroutine.persistence.user.Role;
 import com.mygymroutine.persistence.user.User;
 import com.mygymroutine.persistence.user.UserRepository;
@@ -36,14 +38,19 @@ public class AuthenticationService {
 	private final AuthenticationManager authenticationManager;
 	
 	private static final Logger log = LogManager.getLogger(AuthenticationService.class);
+	
+	@Autowired
+	private InitializerService initializerService;
 
 	public AuthenticationResponse register(RegisterRequest request) throws NewUserWithDifferentPasswordException {
 		
 		if(request.getPassword().contentEquals(request.getPassword2())) {
 			var user = User.builder()
-					.firstname(request.getFirstname())
-					.lastname(request.getLastname())
+					.firstName(request.getFirstname())
+					.lastName(request.getLastname())
 					.email(request.getEmail())
+					.userWeight(request.getWeight())
+					.userHeight(request.getHeight())
 					.password(passwordEncoder.encode(request.getPassword()))
 					.role(request.getRole() != null ? request.getRole() : Role.USER)
 					.build();
@@ -52,6 +59,11 @@ public class AuthenticationService {
 				var jwtToken = jwtService.generateToken(user);
 				saveUserToken(savedUser, jwtToken);
 				log.info("AuthenticationService() - User registered");
+				
+				if(savedUser.getId()!=1) {
+					initializerService.CreateDefaultRoutine(user.getId());
+				}
+				
 				return AuthenticationResponse.builder()
 						.token(jwtToken)
 						.userId(user.getId())
@@ -59,7 +71,7 @@ public class AuthenticationService {
 						.build();				
 			} catch(DataIntegrityViolationException ex) {
 				log.error("AuthenticationService() - User cannot be registered beacuse the email is in use");
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This email is in use");		
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Este email ya está en uso");		
 			}
 			
 		} else {
@@ -107,5 +119,8 @@ public class AuthenticationService {
 				.expired(false).build();
 		tokenRepository.save(token);
 	}
+	
+	
+	
 
 }

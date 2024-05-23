@@ -3,9 +3,12 @@ package com.mygymroutine.persistence.routine.routineCreation.weekDayExerciseDeta
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
 
 @Repository
 public interface WeekDayExerciseDetailsRepository extends JpaRepository<WeekDayExerciseDetails, Long> {
@@ -19,10 +22,24 @@ public interface WeekDayExerciseDetailsRepository extends JpaRepository<WeekDayE
             "WHERE w.exercise.exerciseId = :exerciseId " +
             "AND rc.routine.id = :routineId " +
             "AND rc.workout.id = :workoutId")
-     List<WeekDayExerciseDetails> findByExerciseIdAndRoutineIdAndWorkoutId(
+     WeekDayExerciseDetails findByExerciseIdAndRoutineIdAndWorkoutId(
          @Param("exerciseId") Long exerciseId,
          @Param("routineId") Long routineId,
          @Param("workoutId") Long workoutId
      );
+    
+    @Modifying
+    @Transactional
+    @Query("UPDATE WeekDayExerciseDetails w " +
+            "SET w.series = :series, " +
+            "w.reps = :reps, " +
+            "w.weight = :weight " +
+            "WHERE w.id = :id")
+    void editFieldById(
+            @Param("id") Long id,
+            @Param("series") int series,
+            @Param("reps") int reps,
+            @Param("weight") double weight
+    );
 
 }

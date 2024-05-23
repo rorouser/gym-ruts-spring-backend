@@ -1,5 +1,7 @@
 package com.mygymroutine.auth;
 
+import java.util.Date;
+
 import com.mygymroutine.persistence.user.Role;
 
 import lombok.AllArgsConstructor;
@@ -18,6 +20,10 @@ public class RegisterRequest {
 	private String lastname;
 	
 	private String email;
+	
+	private int height;
+	
+	private int weight;
 	
 	private Role role;
 	

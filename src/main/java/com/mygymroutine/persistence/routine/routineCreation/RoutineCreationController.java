@@ -1,7 +1,6 @@
 	package com.mygymroutine.persistence.routine.routineCreation;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,12 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mygymroutine.persistence.routine.Routine;
 import com.mygymroutine.persistence.routine.RoutineCreate;
-import com.mygymroutine.persistence.routine.RoutineResponse;
 import com.mygymroutine.persistence.routine.RoutineService;
-import com.mygymroutine.persistence.user.Role;
-import com.mygymroutine.persistence.user.User;
-import com.mygymroutine.persistence.workout.Workout;
-import com.mygymroutine.persistence.workout.WorkoutResponse;
+import com.mygymroutine.persistence.routine.routineCreation.weekDayExerciseDetails.WeekDayExerciseDetailsService;
 
 @RestController
 @RequestMapping("/api/routineworkouts")
@@ -32,12 +27,25 @@ public class RoutineCreationController {
     
     @Autowired
     private RoutineService routineService;
+    
+    @Autowired
+    private WeekDayExerciseDetailsService weekDayExerciseDetailsService;
 
     @GetMapping("/{routineId}")
     public ResponseEntity<List<RoutineCreationResponse>> getRoutineWorkoutByRoutineId(@PathVariable Long routineId) {
         List<RoutineCreationResponse> routineCreations = routineCreationService.getRoutineWorkoutByRoutineId(routineId);
 
     	if(!routineCreations.isEmpty()) {
+    		return ResponseEntity.ok(routineCreations);
+    	} else {
+    		return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    	}
+    }
+    @GetMapping("/one/{routineId}")
+    public ResponseEntity<RoutineCreationResponse> getRoutineCreationById(@PathVariable Long routineId) {
+        RoutineCreationResponse routineCreations = routineCreationService.getRoutineCreationById(routineId);
+
+    	if(routineCreations!= null) {
     		return ResponseEntity.ok(routineCreations);
     	} else {
     		return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
