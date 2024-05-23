@@ -7,12 +7,18 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mygymroutine.persistence.exercise.IsCalistenics;
 import com.mygymroutine.persistence.routine.routineCreation.RoutineCreation;
 import com.mygymroutine.persistence.routine.routineCreation.RoutineCreationService;
 import com.mygymroutine.persistence.routine.routineCreation.WorkoutWeekdayCreate;
+import com.mygymroutine.persistence.routine.routineCreation.weekDayExerciseDetails.WeekDayExerciseDetailsResponse;
+import com.mygymroutine.persistence.routine.routineCreation.weekDayExerciseDetails.WeekDayExerciseDetailsService;
 import com.mygymroutine.persistence.user.Role;
 import com.mygymroutine.persistence.user.User;
+import com.mygymroutine.persistence.user.UserService;
 import com.mygymroutine.persistence.workout.Workout;
+import com.mygymroutine.persistence.workout.workoutCreation.WorkoutCreationResponse;
+import com.mygymroutine.persistence.workout.workoutCreation.WorkoutCreationService;
 
 @Service
 public class RoutineService {
@@ -21,7 +27,16 @@ public class RoutineService {
     private RoutineRepository routineRepository;
     
     @Autowired
+    private WorkoutCreationService workoutCreationService;
+    
+    @Autowired
+    private WeekDayExerciseDetailsService weekDayExerciseDetailsService;
+    
+    @Autowired
     private RoutineCreationService routineCreationService;
+    
+    @Autowired 
+    private UserService userService;
 
     public List<RoutineResponse> getAllRoutinesByUserId(Integer userId) {
     	List<Routine> routines = routineRepository.findAllByUser_Id(userId);
@@ -57,6 +72,18 @@ public class RoutineService {
         Routine createdRoutine = routineRepository.save(routineToCreate);
 
         responseToRoutineWorkout(userId, workoutWeekdayCreateList, createdRoutine);
+        
+//        for (WorkoutWeekdayCreate workoutWeekdayCreate : workoutWeekdayCreateList) {
+//        	List<WorkoutCreationResponse> workoutCreationList = workoutCreationService.
+//        			getWorkoutExerciseByWorkoutId(workoutWeekdayCreate.getWorkout().getWorkoutId());
+//        	
+//        	for (WorkoutCreationResponse workoutCreationResponse : workoutCreationList) {
+//        		workoutCreationResponse.getExercise().getExerciseId();
+//        		
+//        	}
+//        	
+//        }
+
 
         return createdRoutine;
     }
@@ -78,8 +105,38 @@ public class RoutineService {
                     .workout(workoutToCreate)
                     .weekday(workoutWeekdayCreate.getWeekDay())
                     .build();
-            routineCreationService.save(routineWorkout);
-       
+            
+            RoutineCreation routineCreation = routineCreationService.save(routineWorkout);
+            
+            List<WorkoutCreationResponse> workoutCreationList = workoutCreationService.
+        			getWorkoutExerciseByWorkoutId(workoutWeekdayCreate.getWorkout().getWorkoutId());
+            
+            Optional<User> existingUser = userService.getUserByIdCheck(userId);
+            
+            for (WorkoutCreationResponse workoutCreationResponse : workoutCreationList) {
+            	
+            	WeekDayExerciseDetailsResponse weekDayExerciseDetailsToCreate = new WeekDayExerciseDetailsResponse();
+        		
+            	if(workoutCreationResponse.getExercise().getIsCalistenics() == IsCalistenics.YES) {
+            		weekDayExerciseDetailsToCreate = WeekDayExerciseDetailsResponse.builder()
+            				.series(4)
+            				.reps(12)
+            				.weight(existingUser.get().getUserWeight())
+            				.exerciseId(workoutCreationResponse.getExercise().getExerciseId())
+            				.routineCreationId(routineCreation.getId())
+            				.build();
+            	} else {
+            		weekDayExerciseDetailsToCreate = WeekDayExerciseDetailsResponse.builder()
+            				.series(4)
+            				.reps(12)
+            				.weight(40)
+            				.exerciseId(workoutCreationResponse.getExercise().getExerciseId())
+            				.routineCreationId(routineCreation.getId())
+            				.build();
+            	}
+        		
+        		weekDayExerciseDetailsService.create(weekDayExerciseDetailsToCreate);
+        	}
         }
 	}
 

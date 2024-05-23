@@ -42,7 +42,7 @@ public class UserController {
     
     @PutMapping("/update/admin/{userId}")
     public ResponseEntity<UserResponse> updateUser(@PathVariable Integer userId, @RequestBody User updatedUser) {
-    	UserResponse savedUser = userService.updateUser(userId,updatedUser);
+    	UserResponse savedUser = userService.updateUser(userId, updatedUser);
 
         if (savedUser!=null) {
             return new ResponseEntity<>(savedUser, HttpStatus.OK);
@@ -63,7 +63,6 @@ public class UserController {
 
     }
 
-    //De momento no funciona por las foreign key
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable Integer userId) {
         Optional<User> user = userService.getUserByIdCheck(userId);

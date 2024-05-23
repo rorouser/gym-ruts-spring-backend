@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mygymroutine.persistence.exercise.ExerciseResponse;
+import com.mygymroutine.persistence.user.User;
 import com.mygymroutine.persistence.workout.WorkoutResponse;
 
 import jakarta.transaction.Transactional;
@@ -31,8 +32,9 @@ public class WorkoutCreationService {
                         		workoutCreation.getExercise().getInstructions(),
                         		workoutCreation.getExercise().getImg(),
                         		workoutCreation.getExercise().getMuscleGroup(),
-                        		workoutCreation.getExercise().getIsCalistenics(),
-                        		workoutCreation.getExercise().getUser().getId()))
+                        		workoutCreation.getExercise().getIsCalistenics(), 
+                        		workoutCreation.getWorkout().getUser().getId()))
+
                         .build())
                 .collect(Collectors.toList());
 	}
