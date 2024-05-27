@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum IsCalistenics {
-	
-    YES,
-    NO
+	SI,
+	NO
+
 }
