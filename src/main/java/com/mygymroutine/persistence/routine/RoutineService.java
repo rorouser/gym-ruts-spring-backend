@@ -1,5 +1,6 @@
 package com.mygymroutine.persistence.routine;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -11,8 +12,12 @@ import com.mygymroutine.persistence.exercise.IsCalistenics;
 import com.mygymroutine.persistence.routine.routineCreation.RoutineCreation;
 import com.mygymroutine.persistence.routine.routineCreation.RoutineCreationService;
 import com.mygymroutine.persistence.routine.routineCreation.WorkoutWeekdayCreate;
+import com.mygymroutine.persistence.routine.routineCreation.weekDayExerciseDetails.WeekDayExerciseDetails;
 import com.mygymroutine.persistence.routine.routineCreation.weekDayExerciseDetails.WeekDayExerciseDetailsResponse;
 import com.mygymroutine.persistence.routine.routineCreation.weekDayExerciseDetails.WeekDayExerciseDetailsService;
+import com.mygymroutine.persistence.routine.routineCreation.weekDayExerciseDetails.exerciseProgress.ExerciseProgress;
+import com.mygymroutine.persistence.routine.routineCreation.weekDayExerciseDetails.exerciseProgress.ExerciseProgressResponse;
+import com.mygymroutine.persistence.routine.routineCreation.weekDayExerciseDetails.exerciseProgress.ExerciseProgressService;
 import com.mygymroutine.persistence.user.Role;
 import com.mygymroutine.persistence.user.User;
 import com.mygymroutine.persistence.user.UserService;
@@ -31,6 +36,9 @@ public class RoutineService {
     
     @Autowired
     private WeekDayExerciseDetailsService weekDayExerciseDetailsService;
+    
+    @Autowired
+    private ExerciseProgressService exerciseProgressService;
     
     @Autowired
     private RoutineCreationService routineCreationService;
@@ -117,7 +125,7 @@ public class RoutineService {
             	
             	WeekDayExerciseDetailsResponse weekDayExerciseDetailsToCreate = new WeekDayExerciseDetailsResponse();
         		
-            	if(workoutCreationResponse.getExercise().getIsCalistenics() == IsCalistenics.YES) {
+            	if(workoutCreationResponse.getExercise().getIsCalistenics() == IsCalistenics.SI) {
             		weekDayExerciseDetailsToCreate = WeekDayExerciseDetailsResponse.builder()
             				.series(4)
             				.reps(12)
@@ -134,8 +142,25 @@ public class RoutineService {
             				.routineCreationId(routineCreation.getId())
             				.build();
             	}
-        		
         		weekDayExerciseDetailsService.create(weekDayExerciseDetailsToCreate);
+        		
+        		if(userId == 2) {
+	        		WeekDayExerciseDetailsResponse weekDayExerciseDetailsResponse = weekDayExerciseDetailsService.findByWorkoutIdAndRoutineId(workoutCreationResponse.getExercise().getExerciseId(),routine.getRoutineId() , 
+	        				workoutCreationResponse.getWorkout().getWorkoutId());
+	        		
+	        		for (int i=0; i<100; i+=10) {
+	        			
+		        		ExerciseProgressResponse exerciseProgress = ExerciseProgressResponse.builder()
+		            			.series(weekDayExerciseDetailsResponse.getSeries())
+		            			.reps(weekDayExerciseDetailsResponse.getReps())
+		            			.weight(weekDayExerciseDetailsResponse.getWeight() + i)
+		            			.weekDayExerciseDetailsId(weekDayExerciseDetailsResponse.getId())
+		            			.build();
+		        		
+		        		exerciseProgressService.createExerciseProgress(exerciseProgress);
+						
+					}
+        		}
         	}
         }
 	}

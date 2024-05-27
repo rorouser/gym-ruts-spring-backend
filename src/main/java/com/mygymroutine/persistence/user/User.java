@@ -1,5 +1,6 @@
 package com.mygymroutine.persistence.user;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -64,19 +65,19 @@ public class User implements UserDetails{
 	private Role role = Role.USER;
 	
 	@OneToMany(mappedBy = "user", cascade={CascadeType.REMOVE}, orphanRemoval=true)
-	private List<Token> tokens;
+	private List<Token> tokens = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "user", cascade={CascadeType.REMOVE}, orphanRemoval=true)
-	private List<Exercise> exercises;
+	private List<Exercise> exercises = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "user", cascade={CascadeType.REMOVE}, orphanRemoval=true)
-	private List<Routine> routines;
+	private List<Routine> routines = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "user", cascade={CascadeType.REMOVE}, orphanRemoval=true)
-	private List<Workout> workouts;
+	private List<Workout> workouts = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "user", cascade={CascadeType.REMOVE}, orphanRemoval=true)
-	private List<FavouriteExercise> favouriteExercises;
+	private List<FavouriteExercise> favouriteExercises = new ArrayList<>();
 	
 	public User(int id) {
 		this.id = id;

@@ -61,7 +61,7 @@ public class AuthenticationService {
 				log.info("AuthenticationService() - User registered");
 				
 				if(savedUser.getId()!=1) {
-					initializerService.CreateDefaultRoutine(user.getId());
+					initializerService.createDefaultRoutine(user.getId());
 				}
 				
 				return AuthenticationResponse.builder()
