@@ -1,5 +1,6 @@
 package com.mygymroutine.persistence.user;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,30 +40,42 @@ public class UserService {
     }
 
     public UserResponse updateUser(Integer userId, User updatedUser) {
-    	Optional<User> existingUser = getUserByIdCheck(updatedUser.getId());
-    	
-    	 if (existingUser.isPresent() && 
-    			 (existingUser.get().getId() == updatedUser.getId() || userId == 1)) {
-    		 
-             //updatedUser.setId(userId);
-             updatedUser.setPassword(existingUser.get().getPassword());
-             User savedUser = userRepository.save(updatedUser);
+        Optional<User> existingUserOptional = getUserByIdCheck(updatedUser.getId());
+        
+        if (existingUserOptional.isPresent() && 
+                (existingUserOptional.get().getId() == updatedUser.getId() || userId == 1)) {
 
-             UserResponse userResponse = UserResponse.builder()
-             		 .id(savedUser.getId())
-                     .firstName(savedUser.getFirstName())
-                     .lastName(savedUser.getLastName())
-                     .email(savedUser.getEmail())
-                     .registrationDate(savedUser.getRegistrationDate())
-                     .userWeight(savedUser.getUserWeight())
-                     .userHeight(savedUser.getUserHeight())
-                     .build();
-             return userResponse;
-             
-    	 } else {
-    		return null; 
-    	 } 
+            User existingUser = existingUserOptional.get();
+
+            updatedUser.setPassword(existingUser.getPassword());
+
+            updatedUser.setTokens(existingUser.getTokens());
+            updatedUser.setRoutines(existingUser.getRoutines());
+            updatedUser.setWorkouts(existingUser.getWorkouts());
+            updatedUser.setFavouriteExercises(existingUser.getFavouriteExercises());
+
+            existingUser.getExercises().clear();
+            existingUser.getExercises().addAll(updatedUser.getExercises());
+            updatedUser.setExercises(existingUser.getExercises());
+
+            User savedUser = userRepository.save(updatedUser);
+
+            UserResponse userResponse = UserResponse.builder()
+                    .id(savedUser.getId())
+                    .firstName(savedUser.getFirstName())
+                    .lastName(savedUser.getLastName())
+                    .email(savedUser.getEmail())
+                    .registrationDate(savedUser.getRegistrationDate())
+                    .userWeight(savedUser.getUserWeight())
+                    .userHeight(savedUser.getUserHeight())
+                    .build();
+
+            return userResponse;
+        } else {
+            return null;
+        }
     }
+
 
     public void deleteUser(Integer userId) {
         userRepository.deleteById(userId);
@@ -83,6 +96,7 @@ public class UserService {
                             .userWeight(user.getUserWeight())
                             .role(user.getRole().toString())
                             .build())
+                    .sorted(Comparator.comparing(UserResponse::getId))
                     .collect(Collectors.toList());
     	return userResponses;
     } else {

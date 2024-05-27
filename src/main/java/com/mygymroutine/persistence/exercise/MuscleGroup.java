@@ -5,12 +5,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum MuscleGroup {
 	
-    CHEST,
-    BACK,
-    LEGS,
-    SHOULDERS,
-    ARMS,
+    PECHO,
+    ESPALDA,
+    PIERNA,
+    HOMBRO,
+    BRAZOS,
     CORE,
-    GLUTES,
-    OTHER
+    GLUTEOS,
+    OTRO
 }

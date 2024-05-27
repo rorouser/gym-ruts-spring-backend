@@ -5,12 +5,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum WeekDay {
 	
-    MONDAY,
-    TUESDAY,
-    WEDNESDAY,
-    THURSDAY,
-    FRIDAY,
-    SATURDAY,
-    SUNDAY
+    LUNES,
+    MARTES,
+    MIERCOLES,
+    JUEVES,
+    VIERNES,
+    SABADO,
+    DOMINGO
 }
 

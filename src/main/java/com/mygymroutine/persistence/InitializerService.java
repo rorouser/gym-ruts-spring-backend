@@ -23,7 +23,7 @@ public class InitializerService {
 	@Autowired
 	private RoutineService routineService;
 	
-	public void CreateDefaultRoutine(int userId) {
+	public void createDefaultRoutine(int userId) {
 		
 		Workout legs = workoutService.createWorkout(userId, new WorkoutCreate().builder()
 				.workout(new WorkoutResponse().builder()
@@ -111,21 +111,21 @@ public class InitializerService {
 								.workoutName(legs.getWorkoutName())
 								.workoutId(legs.getWorkoutId())
 								.build())
-						.weekDay(WeekDay.MONDAY)
+						.weekDay(WeekDay.LUNES)
 						.build(),
 						new WorkoutWeekdayCreate().builder()
 						.workout(new WorkoutResponse().builder()
 								.workoutName(chest.getWorkoutName())
 								.workoutId(chest.getWorkoutId())
 								.build())
-						.weekDay(WeekDay.WEDNESDAY)
+						.weekDay(WeekDay.MIERCOLES)
 						.build(),
 						new WorkoutWeekdayCreate().builder()
 						.workout(new WorkoutResponse().builder()
 								.workoutName(back.getWorkoutName())
 								.workoutId(back.getWorkoutId())
 								.build())
-						.weekDay(WeekDay.FRIDAY)
+						.weekDay(WeekDay.VIERNES)
 						.build(),
 				})
 				.build());
