@@ -19,11 +19,13 @@ public class RegisterRequest {
 	
 	private String lastname;
 	
+	private String secondLastName;
+	
 	private String email;
 	
-	private int height;
+	private int userHeight;
 	
-	private int weight;
+	private int userWeight;
 	
 	private Role role;
 	
