@@ -48,9 +48,10 @@ public class AuthenticationService {
 			var user = User.builder()
 					.firstName(request.getFirstname())
 					.lastName(request.getLastname())
+					.secondLastName(request.getSecondLastName())
 					.email(request.getEmail())
-					.userWeight(request.getWeight())
-					.userHeight(request.getHeight())
+					.userWeight(request.getUserWeight())
+					.userHeight(request.getUserHeight())
 					.password(passwordEncoder.encode(request.getPassword()))
 					.role(request.getRole() != null ? request.getRole() : Role.USER)
 					.build();

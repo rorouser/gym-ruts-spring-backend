@@ -52,6 +52,12 @@ public class RoutineCreationController {
     	}
     }
     
+    @GetMapping("/countByWeekday")
+    public ResponseEntity<List<WeekDayCountDTO>> countByWeekday() {
+    	List<WeekDayCountDTO> routineCreations = routineCreationService.getCountByWeekday();
+        return ResponseEntity.ok(routineCreations);
+    }
+    
     @PostMapping("/{userId}")
     public ResponseEntity<Routine> createRoutine(@PathVariable Integer userId, 
             @RequestBody RoutineCreate routineCreate) {

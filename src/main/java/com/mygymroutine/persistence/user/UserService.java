@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.mygymroutine.exceptions.NewUserWithDifferentPasswordException;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -41,39 +43,44 @@ public class UserService {
 
     public UserResponse updateUser(Integer userId, User updatedUser) {
         Optional<User> existingUserOptional = getUserByIdCheck(updatedUser.getId());
-        
-        if (existingUserOptional.isPresent() && 
-                (existingUserOptional.get().getId() == updatedUser.getId() || userId == 1)) {
 
-            User existingUser = existingUserOptional.get();
-
-            updatedUser.setPassword(existingUser.getPassword());
-
-            updatedUser.setTokens(existingUser.getTokens());
-            updatedUser.setRoutines(existingUser.getRoutines());
-            updatedUser.setWorkouts(existingUser.getWorkouts());
-            updatedUser.setFavouriteExercises(existingUser.getFavouriteExercises());
-
-            existingUser.getExercises().clear();
-            existingUser.getExercises().addAll(updatedUser.getExercises());
-            updatedUser.setExercises(existingUser.getExercises());
-
-            User savedUser = userRepository.save(updatedUser);
-
-            UserResponse userResponse = UserResponse.builder()
-                    .id(savedUser.getId())
-                    .firstName(savedUser.getFirstName())
-                    .lastName(savedUser.getLastName())
-                    .email(savedUser.getEmail())
-                    .registrationDate(savedUser.getRegistrationDate())
-                    .userWeight(savedUser.getUserWeight())
-                    .userHeight(savedUser.getUserHeight())
-                    .build();
-
-            return userResponse;
-        } else {
-            return null;
-        }
+	    if(passwordEncoder.matches(updatedUser.getPassword(), existingUserOptional.get().getPassword())) {
+	    	
+	        if (existingUserOptional.isPresent() && 
+	                (existingUserOptional.get().getId() == updatedUser.getId() || userId == 1)) {
+	
+	            User existingUser = existingUserOptional.get();
+	
+	            updatedUser.setPassword(existingUser.getPassword());
+	
+	            updatedUser.setTokens(existingUser.getTokens());
+	            updatedUser.setRoutines(existingUser.getRoutines());
+	            updatedUser.setWorkouts(existingUser.getWorkouts());
+	            updatedUser.setFavouriteExercises(existingUser.getFavouriteExercises());
+	
+	            existingUser.getExercises().clear();
+	            existingUser.getExercises().addAll(updatedUser.getExercises());
+	            updatedUser.setExercises(existingUser.getExercises());
+	
+	            User savedUser = userRepository.save(updatedUser);
+	
+	            UserResponse userResponse = UserResponse.builder()
+	                    .id(savedUser.getId())
+	                    .firstName(savedUser.getFirstName())
+	                    .lastName(savedUser.getLastName())
+	                    .email(savedUser.getEmail())
+	                    .registrationDate(savedUser.getRegistrationDate())
+	                    .userWeight(savedUser.getUserWeight())
+	                    .userHeight(savedUser.getUserHeight())
+	                    .build();
+	
+	            return userResponse;
+	        } else {
+	            return null;
+	        }
+	    }else {
+			throw new NewUserWithDifferentPasswordException();
+	    }
     }
 
 
