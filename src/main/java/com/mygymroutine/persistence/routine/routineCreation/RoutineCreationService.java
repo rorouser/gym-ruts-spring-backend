@@ -57,6 +57,17 @@ public class RoutineCreationService {
         }
     }
     
+    
+    public List<WeekDayCountDTO> getCountByWeekday() {
+        List<Object[]> results = routineCreationRepository.countByWeekday();
+        return results.stream()
+            .map(result -> WeekDayCountDTO.builder()
+                .weekday((WeekDay) result[0]) 
+                .count(((Number) result[1]).longValue())
+                .build())
+            .collect(Collectors.toList());
+    };
+    
     @Transactional
     public void deleteByRoutineId(Long routineId) {
     	routineCreationRepository.deleteByRoutine_RoutineId(routineId);

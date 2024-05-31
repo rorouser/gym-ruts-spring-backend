@@ -86,10 +86,10 @@ public class DatabaseInitializer {
 				.firstname("Iratxe")
 				.lastname("Llaga")
 				.email("user@user.com")
-				.weight(50)
-				.height(160)
-				.password("user")
-				.password2("user")
+				.userWeight(50)
+				.userHeight(160)
+				.password("usuario")
+				.password2("usuario")
 				.role(Role.USER)
 				.build();
 		
