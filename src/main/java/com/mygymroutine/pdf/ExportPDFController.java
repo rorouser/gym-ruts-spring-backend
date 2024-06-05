@@ -41,37 +41,65 @@ public class ExportPDFController {
     private RoutineService routineService;
     
     private final Map<String, byte[]> tempFileMap = new HashMap<>();
-
-//    @GetMapping("/{routineId}")
-//    public ResponseEntity<Resource> downloadaPdf(@PathVariable Long routineId) {
+    
+//    @PostMapping("/{routineId}")
+//    public ResponseEntity<String> downloadPdf(@PathVariable Long routineId, @RequestBody boolean withWeights) {
 //        try {
 //            List<RoutineCreationResponse> routineWorkouts = routineCreationService.getRoutineWorkoutByRoutineId(routineId);
 //            String routineName = routineService.getRoutineById(routineId).get().getRoutineName();
-//            byte[] pdfContent = exportPDFService.exportToPDFA4(routineName, routineWorkouts, true);
+//            byte[] pdfContent = exportPDFService.exportToPDFA4(routineName, routineWorkouts, withWeights);
 //
-//            ByteArrayResource resource = new ByteArrayResource(pdfContent);
+//            String uniqueId = UUID.randomUUID().toString();
+//            String tempFilePath = generateTempPdfFile(pdfContent, uniqueId);
+//
+//            String url = "pdf/download-pdf/" + uniqueId;
+//
+//            return ResponseEntity.ok()
+//                    .contentType(MediaType.APPLICATION_JSON)
+//                    .body(url);
+//        } catch (IOException e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+//        }
+//    } 
+//    
+//    private String generateTempPdfFile(byte[] pdfContent, String uniqueId) throws IOException {
+//
+//        String tempFileName = uniqueId + ".pdf";
+//        Path tempFilePath = Paths.get(tempFileName); 
+//        tempFileMap.put(uniqueId, pdfContent);
+//        Files.write(tempFilePath, pdfContent);
+//
+//        return tempFilePath.toString(); 
+//    }
+//
+//    @GetMapping("/download-pdf/{uniqueId}")
+//    public ResponseEntity<Resource> downloadPdfFromUrl(@PathVariable String uniqueId) {
+//        try {
+//            if (!tempFileMap.containsKey(uniqueId)) {
+//                return ResponseEntity.notFound().build();
+//            }
+//
+//            byte[] tempFilePath = tempFileMap.get(uniqueId);
+//
+//            ByteArrayResource resource = new ByteArrayResource(tempFilePath);
 //
 //            HttpHeaders headers = new HttpHeaders();
-//            headers.add(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=" + "rutina" + ".pdf");
+//            headers.add(HttpHeaders.CONTENT_DISPOSITION, "inline;");
 //
 //            return ResponseEntity.ok()
 //                    .headers(headers)
 //                    .contentType(MediaType.APPLICATION_PDF)
 //                    .body(resource);
-//        } catch (IOException e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+//        } finally {
+//            tempFileMap.remove(uniqueId);
 //        }
 //    }
     
-    @PostMapping("/{routineId}")
-    public ResponseEntity<String> downloadPdf(@PathVariable Long routineId, @RequestBody boolean withWeights) {
+    @PostMapping()
+    public ResponseEntity<String> downloadPdf(@RequestBody byte[] pdf) {
         try {
-            List<RoutineCreationResponse> routineWorkouts = routineCreationService.getRoutineWorkoutByRoutineId(routineId);
-            String routineName = routineService.getRoutineById(routineId).get().getRoutineName();
-            byte[] pdfContent = exportPDFService.exportToPDFA4(routineName, routineWorkouts, withWeights);
-
             String uniqueId = UUID.randomUUID().toString();
-            String tempFilePath = generateTempPdfFile(pdfContent, uniqueId);
+            String tempFilePath = generateTempPdfFile(pdf, uniqueId);
 
             String url = "pdf/download-pdf/" + uniqueId;
 
@@ -115,5 +143,7 @@ public class ExportPDFController {
             tempFileMap.remove(uniqueId);
         }
     }
+    
+ 
 
 }
