@@ -83,7 +83,8 @@ public class ExportPDFService {
                     } else {
                         tableRow = new Object[]{
                                 exercise.getExercise().getExerciseName(),
-                                weekdayDetails.getSeries() + " series / " + weekdayDetails.getReps() + " reps"
+                                weekdayDetails.getSeries() + " series / " + weekdayDetails.getReps() + " reps",
+                                " "
                         };
                     }
 
