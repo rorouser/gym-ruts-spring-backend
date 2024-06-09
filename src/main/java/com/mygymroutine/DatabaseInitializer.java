@@ -149,7 +149,7 @@ public class DatabaseInitializer {
         	        "reverse_hack_squat.avif", IsCalistenics.NO, MuscleGroup.PIERNA, user),
         	    new Exercise("Remo con cable sentado",
         	        "Este ejercicio implica tirar de un accesorio de cable hacia tu cuerpo mientras estás sentado, usando una máquina de cables.",
-        	        "Seated Cable Row.avif", IsCalistenics.NO, MuscleGroup.ESPALDA, user),
+        	        "seated_cable_row.avif", IsCalistenics.NO, MuscleGroup.ESPALDA, user),
         	    new Exercise("Remo alto con polea de rodillas",
         	        "Realiza un ejercicio de remo alto con polea mientras estás de rodillas, enfocándote en tirar del asa hacia tu sección media.",
         	        "kneeling_high_pulley_row.avif", IsCalistenics.NO, MuscleGroup.ESPALDA, user),
@@ -189,9 +189,21 @@ public class DatabaseInitializer {
         	    new Exercise("Pulldown de dorsales",
         	        "Realiza pulldown de dorsales con la forma adecuada. El pulldown de dorsales es un ejercicio de tirón que dirige principalmente los músculos latissimus dorsi (comúnmente conocidos como “lats”) en tu espalda.",
         	        "lat_pulldown.avif", IsCalistenics.NO, MuscleGroup.ESPALDA, user),
-        	    new Exercise("Remo con barra en T",
-        	        "El remo con barra en T es un ejercicio de entrenamiento de fuerza que imita el movimiento de remar en un bote.",
-        	        "lever_tbar.avif", IsCalistenics.NO, MuscleGroup.ESPALDA, user)
+        	    new Exercise("Press militar sentado",
+        	        "Siéntate en un banco con respaldo, sostén una barra con las manos ligeramente más anchas que los hombros.",
+        	        "press_militar_sentado.avif", IsCalistenics.NO, MuscleGroup.HOMBRO, user),
+        	    new Exercise("Elevación lateral",
+            	        "Ajusta la polea en la posición más baja y agarra la manija con la mano opuesta al lado de la polea, manteniendo el brazo ligeramente doblado.",
+            	        "elevacion_lateral_hombros.avif", IsCalistenics.NO, MuscleGroup.HOMBRO, user),
+        	    new Exercise("Press militar polea",
+            	        "Sujeta el agarre, mantén una postura erguida y eleva los hombros hacia las orejas contrayendo las escápulas, sin flexionar los codos.",
+            	        "elevacion_polea_escapulas.avif", IsCalistenics.NO, MuscleGroup.HOMBRO, user),
+        	    new Exercise("Elevación lateral polea",
+            	        "La elevación lateral con polea para hombro es un ejercicio que se realiza de pie junto a una máquina de poleas. Ajusta la polea en la posición más baja y agarra la manija con la mano opuesta al lado de la polea, manteniendo el brazo ligeramente doblado..",
+            	        "elevacion_polea_lateral_hombros.avif", IsCalistenics.NO, MuscleGroup.HOMBRO, user),
+        	    new Exercise("Elevación frontal",
+            	        "Sujeta una mancuerna en cada mano, palmas hacia abajo. Eleva los brazos rectos hacia adelante hasta la altura de los hombros.",
+            	        "frontal_hombros.avif", IsCalistenics.NO, MuscleGroup.HOMBRO, user)
         	);
 
 
