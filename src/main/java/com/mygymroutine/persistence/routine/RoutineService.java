@@ -3,6 +3,7 @@ package com.mygymroutine.persistence.routine;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -145,21 +146,29 @@ public class RoutineService {
         		weekDayExerciseDetailsService.create(weekDayExerciseDetailsToCreate);
         		
         		if(userId == 2) {
-	        		WeekDayExerciseDetailsResponse weekDayExerciseDetailsResponse = weekDayExerciseDetailsService.findByWorkoutIdAndRoutineId(workoutCreationResponse.getExercise().getExerciseId(),routine.getRoutineId() , 
-	        				workoutCreationResponse.getWorkout().getWorkoutId());
-	        		
-	        		for (int i=0; i<100; i+=10) {
-	        			
-		        		ExerciseProgressResponse exerciseProgress = ExerciseProgressResponse.builder()
-		            			.series(weekDayExerciseDetailsResponse.getSeries())
-		            			.reps(weekDayExerciseDetailsResponse.getReps())
-		            			.weight(weekDayExerciseDetailsResponse.getWeight() + i)
-		            			.weekDayExerciseDetailsId(weekDayExerciseDetailsResponse.getId())
-		            			.build();
-		        		
-		        		exerciseProgressService.createExerciseProgress(exerciseProgress);
-						
-					}
+        		    WeekDayExerciseDetailsResponse weekDayExerciseDetailsResponse = weekDayExerciseDetailsService.findByWorkoutIdAndRoutineId(
+        		            workoutCreationResponse.getExercise().getExerciseId(),
+        		            routine.getRoutineId(),
+        		            workoutCreationResponse.getWorkout().getWorkoutId()
+        		    );
+
+        		    Random random = new Random();
+
+        		    int constin = 50;
+        		    
+        		    for (int i = 0; i < 10; i++) { 
+        		    	constin +=2;
+        		        int randomWeight = constin + random.nextInt(5);
+
+        		        ExerciseProgressResponse exerciseProgress = ExerciseProgressResponse.builder()
+        		                .series(weekDayExerciseDetailsResponse.getSeries())
+        		                .reps(weekDayExerciseDetailsResponse.getReps())
+        		                .weight(randomWeight)
+        		                .weekDayExerciseDetailsId(weekDayExerciseDetailsResponse.getId())
+        		                .build();
+
+        		        exerciseProgressService.createExerciseProgress(exerciseProgress);
+        		    }
         		}
         	}
         }
