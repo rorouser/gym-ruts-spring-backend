@@ -2,7 +2,7 @@
 
 A modular Java Spring Boot backend for GymRuts, providing authentication, authorization, and session management using JWT, OAuth2 (Google, GitHub), PostgreSQL, and Redis.
 
-> **This README applies to the `main` branch of [rorouser/security-artifact](https://github.com/rorouser/security-artifact/tree/main).**
+> **This README applies to the `main` branch of [rorouser/security-artifact](https://github.com/rorouser/gym-ruts-spring-backend/tree/main).**
 
 ---
 
@@ -22,7 +22,7 @@ A modular Java Spring Boot backend for GymRuts, providing authentication, author
 
 1. **Clone the repository and switch to the `main` branch:**
    ```bash
-   git clone https://github.com/rorouser/security-artifact.git
+   git clone https://github.com/rorouser/gym-ruts-spring-backend.git
    cd security-artifact
    git checkout main
    ```
