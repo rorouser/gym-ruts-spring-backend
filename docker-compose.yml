@@ -1,138 +1,65 @@
-version: '2'
-
 services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: gym-postgres
+    environment:
+      POSTGRES_DB: mygymroutine_hibernate
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: usuario
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d mygymroutine_hibernate"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - gym-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: gym-redis
+    ports:
+      - "9669:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - gym-network
 
   app:
-
-    container_name: my-gym-routine-app
-
     build: .
-
-    image: my-gym-routine:0.0.1-SNAPSHOT
-
+    container_name: gym-spring-app
     ports:
-
-      - "9900:9000"
-      
+      - "9000:9000"
     environment:
-
-      - DATABASE_URL=jdbc:mariadb://mariadb:3306/my_gym_routine_db
-
-      - DATABASE_USERNAME=root
-
-      - DATABASE_PASSWORD=usuario  
-
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/mygymroutine_hibernate
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: usuario
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      SERVER_PORT: 9000
     depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - gym-network
+    restart: unless-stopped
 
-      - mariadb
+volumes:
+  postgres_data:
+  redis_data:
 
-  mariadb:
-
-    image: mariadb:latest
-    
-    container_name: mariadb
-
-    environment:
-
-      MARIADB_DATABASE: my_gym_routine_db
-
-      MARIADB_USER: root
-
-      MARIADB_ROOT_PASSWORD: usuario
-
-      MARIADB_PASSWORD: usuario
-
-    ports:
-
-      - "3306:3306"
-
-
-version: '2'
-
-
-
-services:
-
-
-
-  app:
-
-
-
-    container_name: my-gym-routine-app
-
-
-
-    build: .
-
-
-
-    image: my-gym-routine:0.0.1-SNAPSHOT
-
-
-
-    ports:
-
-
-
-      - "9990:9000"
-
-
-
-    depends_on:
-
-
-
-      - mariadb
-
-
-
-  mariadb:
-
-
-
-    image: mariadb:latest
-
-    
-
-    container_name: mariadb
-
-
-
-    environment:
-    
-    
-    
-    
-    
-    
-    
-    server:
-  port: 9000
-  error:
-    include-message: always
-spring:
-  datasource:
-    url: ${DATABASE_URL}
-    username: ${DATABASE_USERNAME}
-    password: ${DATABASE_PASSWORD}
-  security:
-    user:
-      name: root
-      password: usuario
-  jpa:
-    hibernate:
-      ddl-auto: create-drop
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-    database: mysql
-    database-platform: org.hibernate.dialect.MariaDBDialect
-    
-application:
-  security:
-    jwt:
-      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
-      expiration: 86400000 # a day
-
+networks:
+  gym-network:
+    driver: bridge
