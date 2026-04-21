@@ -68,6 +68,10 @@ public class DatabaseInitializer {
 	@Transactional
 	public void initializeExercises() {
 
+		if (userRepository.count() > 0) {
+			return;
+		}
+
 		var admin = RegisterRequest.builder()
 				.firstname(adminFirstname)
 				.lastname(adminLastname)
