@@ -21,7 +21,7 @@ public class RedisConfig {
     @Value("${redis.port}")
     private int redisPort;
 
-    @Value("${redis.username}")
+    @Value("${redis.username:}")
     private String redisUsername;
 
     @Value("${redis.password:}")  // Valor por defecto vacío si no se define

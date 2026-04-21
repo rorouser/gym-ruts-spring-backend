@@ -1,13 +1,13 @@
 services:
   postgres:
-    image: postgres:15-alpine
+    image: postgres:16-alpine
     container_name: gym-postgres
     environment:
       POSTGRES_DB: mygymroutine_hibernate
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: usuario
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -22,7 +22,7 @@ services:
     image: redis:7-alpine
     container_name: gym-redis
     ports:
-      - "9669:6379"
+      - "6380:6379"
     volumes:
       - redis_data:/data
     command: redis-server --appendonly yes
@@ -35,7 +35,9 @@ services:
       - gym-network
 
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: gym-spring-app
     ports:
       - "9000:9000"
@@ -47,11 +49,29 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       SERVER_PORT: 9000
+      # IMPORTANTE: Cambia esta clave en producción
+      # Genera una nueva con: openssl rand -base64 32
+      APPLICATION_SECURITY_JWT_SECRET_KEY: dGVzdFNlY3JldEtleUZvckd5bVJ1dHNBcHBEb2NrZXIyMDI0UHJvZA==
+      LOGGING_LEVEL_ROOT: INFO
+      LOGGING_LEVEL_COM_GYMRUTS: DEBUG
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
+    networks:
+      - gym-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ../gym-ruts-app
+      dockerfile: Dockerfile
+    container_name: gym-frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - app
     networks:
       - gym-network
     restart: unless-stopped
