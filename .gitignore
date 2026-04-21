@@ -35,3 +35,6 @@ build/
 src/main/resources/application.yml
 
 system.properties
+
+# Secrets — never commit real credentials
+.env

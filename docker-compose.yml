@@ -49,9 +49,7 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       SERVER_PORT: 9000
-      # IMPORTANTE: Cambia esta clave en producción
-      # Genera una nueva con: openssl rand -base64 32
-      APPLICATION_SECURITY_JWT_SECRET_KEY: ***JWT_SECRET_REMOVED***
+      APPLICATION_SECURITY_JWT_SECRET_KEY: ${JWT_SECRET_KEY}
       LOGGING_LEVEL_ROOT: INFO
       LOGGING_LEVEL_COM_GYMRUTS: DEBUG
     depends_on:
